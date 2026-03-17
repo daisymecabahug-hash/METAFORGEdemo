@@ -932,7 +932,7 @@ async function initApp() {
   await initFirebase();
   setAuthUIState({ message: 'Checking account status…' });
 
-  onAuthStateChanged(async (user) => {
+  await onAuthStateChanged(async (user) => {
     if (user) {
       currentUser = { uid: user.uid, email: user.email || '', isGuest: false };
       setAuthUIState({ message: `Signed in as ${currentUser.email}.`, showForms: false, showSignedIn: true, email: currentUser.email });

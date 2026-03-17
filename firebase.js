@@ -70,9 +70,9 @@ export async function signOut() {
   return auth.signOut();
 }
 
-export function onAuthStateChanged(callback) {
+export async function onAuthStateChanged(callback) {
   if (!firebaseEnabled()) return () => {};
-  if (!auth || !db) initFirebase();
+  await initFirebase();
   return auth.onAuthStateChanged(callback);
 }
 
