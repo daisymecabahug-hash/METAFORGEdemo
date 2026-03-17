@@ -511,7 +511,7 @@ const LEVELS = [
         "Specify exactly what components the output prompt should contain — don't be vague.",
         "Include instructions for using [BRACKET] variables to make the template flexible.",
         "Direct the AI to include a self-evaluation checklist in the generated template.",
-        "Evaluate using ALL six rubric criteria — this is the highest-demand task and should target a near-perfect score."
+        "Use CLEAR scoring to guide revisions — this meta-task is the most challenging and rewards thoughtful iteration."
       ],
       time: "40–50 min",
       difficulty: "Expert",
@@ -655,8 +655,12 @@ function getNextUnlockInfo() {
 
 function updateSparksUI() {
   const el = document.getElementById('sparks-count');
+  const navSparks = document.getElementById('nav-sparks');
   const nextEl = document.getElementById('sparks-next');
-  if (el && currentState) el.textContent = String(currentState.sparks || 0);
+  const sparks = currentState?.sparks || 0;
+  if (el) el.textContent = String(sparks);
+  if (navSparks) navSparks.textContent = `Sparks: ${sparks}`;
+
   const next = getNextUnlockInfo();
   if (nextEl) {
     if (!next) {
