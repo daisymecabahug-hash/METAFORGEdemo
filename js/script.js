@@ -334,7 +334,7 @@ async function loadState() {
   const localState = loadStateFromLocal();
   currentState = { ...localState };
 
-  if (firebaseEnabled && currentUser.uid && !currentUser.isGuest) {
+  if (firebaseEnabled() && currentUser.uid && !currentUser.isGuest) {
     try {
       const remote = await getUserData(currentUser.uid);
       if (remote) {
@@ -354,7 +354,7 @@ async function saveState() {
   currentState.lastUpdated = Date.now();
   saveStateToLocal(currentState);
 
-  if (firebaseEnabled && currentUser.uid && !currentUser.isGuest) {
+  if (firebaseEnabled() && currentUser.uid && !currentUser.isGuest) {
     try {
       await saveUserData(currentUser.uid, currentState);
     } catch (e) {
@@ -915,9 +915,9 @@ function initializeAuthUI() {
 async function initApp() {
   initializeAuthUI();
 
-  if (!firebaseEnabled) {
+  if (!firebaseEnabled()) {
     setAuthUIState({
-      message: 'Firebase not configured. Progress is stored locally in this browser. To enable cloud sync, add a Firebase config in firebase.js.',
+      message: 'Firebase not configured. Progress is stored locally in this browser. To enable cloud sync, add a Firebase config in firebase.config.js or set window.FIREBASE_CONFIG.',
       showForms: true,
       showSignedIn: false
     });
@@ -929,7 +929,7 @@ async function initApp() {
     return;
   }
 
-  initFirebase();
+  await initFirebase();
   setAuthUIState({ message: 'Checking account status…' });
 
   onAuthStateChanged(async (user) => {

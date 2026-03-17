@@ -1,22 +1,7 @@
 // Firebase helper module for MetaForge
-// To enable authentication and cloud persistence, set a valid Firebase config.
-// You can set it by editing this file or by defining window.FIREBASE_CONFIG before script execution.
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged as firebaseOnAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+// Uses the Firebase CDN (compat mode) and the global `firebase` namespace.
+// To enable authentication and cloud persistence, configure your Firebase settings in
+// `firebase.config.js` (gitignored) or via `window.FIREBASE_CONFIG`.
 
 let firebaseConfig = window.FIREBASE_CONFIG || {
   apiKey: "<YOUR_API_KEY>",
@@ -27,71 +12,80 @@ let firebaseConfig = window.FIREBASE_CONFIG || {
   appId: "<YOUR_APP_ID>"
 };
 
-// If a local `firebase.config.js` exists, use it (this file is gitignored). This makes it easy
-// to run locally with secrets without committing them, while keeping the default placeholders
-// safe for GitHub.
-(async () => {
+async function loadConfig() {
+  // Attempt to load a local config file if present (gitignored).
   try {
     const mod = await import('./firebase.config.js');
     if (mod?.FIREBASE_CONFIG) {
       firebaseConfig = mod.FIREBASE_CONFIG;
     }
   } catch (e) {
-    // No config file present or import failed; just use window.FIREBASE_CONFIG / defaults.
+    // ignore; use window.FIREBASE_CONFIG or defaults
   }
-})();
+}
 
-export const firebaseEnabled = Boolean(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('<'));
+function isConfigured() {
+  return (
+    typeof firebase !== 'undefined' &&
+    firebaseConfig.apiKey &&
+    !firebaseConfig.apiKey.includes('<')
+  );
+}
+
+export const firebaseEnabled = () => isConfigured();
 
 let app = null;
 let auth = null;
 let db = null;
 
-export function initFirebase() {
-  if (!firebaseEnabled) return null;
+export async function initFirebase() {
+  await loadConfig();
+  if (!firebaseEnabled()) return null;
   if (app) return { app, auth, db };
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
+
+  app = firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+
   return { app, auth, db };
 }
 
-function ensureReady() {
-  if (!firebaseEnabled) throw new Error('Firebase is not configured.');
-  if (!auth || !db) initFirebase();
+async function ensureReady() {
+  if (!firebaseEnabled()) throw new Error('Firebase is not configured.');
+  if (!auth || !db) await initFirebase();
 }
 
 export async function signInWithEmail(email, password) {
-  ensureReady();
-  return signInWithEmailAndPassword(auth, email, password);
+  await ensureReady();
+  return auth.signInWithEmailAndPassword(email, password);
 }
 
 export async function signUpWithEmail(email, password) {
-  ensureReady();
-  return createUserWithEmailAndPassword(auth, email, password);
+  await ensureReady();
+  return auth.createUserWithEmailAndPassword(email, password);
 }
 
 export async function signOut() {
-  ensureReady();
-  return firebaseSignOut(auth);
+  await ensureReady();
+  return auth.signOut();
 }
 
 export function onAuthStateChanged(callback) {
-  if (!firebaseEnabled) return () => {};
-  ensureReady();
-  return firebaseOnAuthStateChanged(auth, callback);
+  if (!firebaseEnabled()) return () => {};
+  if (!auth || !db) initFirebase();
+  return auth.onAuthStateChanged(callback);
 }
 
 export async function getUserData(uid) {
-  ensureReady();
-  const ref = doc(db, 'users', uid);
-  const snap = await getDoc(ref);
-  return snap.exists() ? snap.data() : null;
+  await ensureReady();
+  const ref = db.collection('users').doc(uid);
+  const snap = await ref.get();
+  return snap.exists ? snap.data() : null;
 }
 
 export async function saveUserData(uid, data) {
-  ensureReady();
-  const ref = doc(db, 'users', uid);
-  const payload = { ...data, updatedAt: serverTimestamp() };
-  return setDoc(ref, payload, { merge: true });
+  await ensureReady();
+  const ref = db.collection('users').doc(uid);
+  const payload = { ...data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+  return ref.set(payload, { merge: true });
 }
