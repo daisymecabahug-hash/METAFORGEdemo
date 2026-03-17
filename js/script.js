@@ -1474,7 +1474,7 @@ async function initApp() {
   setAuthUIState({
     message: configured
       ? 'Checking account status…'
-      : 'Firebase not configured. Sign in to store progress locally (no cloud sync).',
+      : 'Sign in to store progress locally.',
     showForms: true,
     showSignedIn: false,
     isGuest: true
