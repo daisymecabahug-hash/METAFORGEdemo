@@ -32,6 +32,15 @@ cp firebase.config.example.js firebase.config.js
 
 5. Fill `firebase.config.js` with your Firebase settings (from Project Settings → General → Your apps → SDK config).
 
+6. (Optional but strongly recommended) Secure your data with Firestore rules:
+
+   - This repo includes `firestore.rules`, which only allows a logged-in user to read/write their own `/users/{uid}` document.
+   - To apply these rules to your project, use the Firebase CLI (requires `firebase init firestore`):
+
+     ```bash
+     firebase deploy --only firestore:rules
+     ```
+
 ---
 
 ## 🚀 Deploy on Render (free static hosting + custom domain)
