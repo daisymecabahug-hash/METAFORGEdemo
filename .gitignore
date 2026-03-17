@@ -1,0 +1,10 @@
+# Node / general
+node_modules/
+.DS_Store
+
+# Build / deployment artifacts
+dist/
+build/
+
+# Firebase config (local only)
+firebase.config.js

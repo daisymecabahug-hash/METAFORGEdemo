@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MetaForge — AI Prompt Engineering Training Platform</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- BACKGROUND LAYERS -->
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ACHIEVEMENT TOAST -->
+  <div id="achievement" class="achievement">
+    <div class="achievement-icon">🏆</div>
+    <div class="achievement-title">Level Master!</div>
+    <div class="achievement-desc">You've completed a level. Keep going!</div>
+  </div>
+
+  <!-- ── NAVIGATION ── -->
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">MetaForge <span>v0.1 alpha</span></div>
+      <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#levels">Levels</a></li>
+        <li><a href="#rubric">Rubric</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <div class="nav-badge">Bloom's Taxonomy</div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="wrapper">
+      <div class="hero-eyebrow">AI Prompt Engineering Training Platform</div>
+      <div class="hero-note" style="margin-top: 12px; color: rgba(255,255,255,0.75); font-size: 0.9rem;">
+        Tip: Run this site from a local server (e.g., <code>python -m http.server</code>) to ensure module imports work.
+      </div>
+      <h1 class="hero-title">
+        <span class="line-1">Forge Your</span>
+        <span class="line-2">Prompt Skills</span>
+      </h1>
+      <p class="hero-sub">
+        MetaForge is a structured learning environment where you master the art of communicating
+        with AI systems. Practice across six cognitive levels — from basic recall to complex
+        creation — and measure your progress with a research-based rubric.
+      </p>
+
+      <!-- AUTH / USER STATE -->
+      <div id="auth-section">
+        <div id="auth-status" class="auth-status">
+          <div class="auth-message">Loading account state…</div>
+        </div>
+
+        <div id="auth-forms" class="auth-forms hidden">
+          <div class="auth-card">
+            <h4>Sign in</h4>
+            <input id="login-email" type="email" placeholder="Email" autocomplete="username" />
+            <input id="login-password" type="password" placeholder="Password" autocomplete="current-password" />
+            <div class="auth-actions">
+              <button id="login-btn" class="btn-primary">Sign in</button>
+              <button id="guest-btn" class="btn-secondary">Continue as guest</button>
+            </div>
+          </div>
+          <div class="auth-card">
+            <h4>Create account</h4>
+            <input id="signup-email" type="email" placeholder="Email" autocomplete="username" />
+            <input id="signup-password" type="password" placeholder="Password" autocomplete="new-password" />
+            <div class="auth-actions">
+              <button id="signup-btn" class="btn-primary">Create account</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="auth-signed-in" class="auth-signed-in hidden">
+          <div class="auth-welcome">
+            <div class="auth-welcome-text">Signed in as <span id="user-email">—</span></div>
+            <button id="signout-btn" class="btn-secondary">Sign out</button>
+          </div>
+          <div class="auth-note">
+            Your progress is saved to your account and will sync across devices.
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Bloom's Levels</div>
+          <div class="stat-progress">
+            <div class="stat-progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Rubric Criteria</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">8</div>
+          <div class="stat-label">Research Sources</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">24</div>
+          <div class="stat-label">Max Score</div>
+        </div>
+      </div>
+
+      <div class="hero-cta-row">
+        <a href="#levels" class="btn-primary">Start Practicing →</a>
+        <a href="#rubric" class="btn-secondary">View Rubric</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LEVELS ── -->
+  <section id="levels">
+    <div class="wrapper">
+      <div class="divider"></div>
+      <div class="section-head">
+        <div class="section-tag">// Cognitive Framework</div>
+        <h2 class="section-title">Select a <em>Difficulty Level</em></h2>
+        <p class="section-desc">
+          Each level maps to a stage in Bloom's Revised Taxonomy (Anderson & Krathwohl, 2001),
+          progressively demanding higher cognitive engagement with AI systems.
+        </p>
+      </div>
+
+      <!-- Level cards injected by script.js -->
+      <div class="levels-grid" id="levels-grid"></div>
+
+      <!-- TASK PANEL (shown on level click) -->
+      <div id="task-panel">
+        <div class="task-header">
+          <div class="task-header-left">
+            <span class="task-level-badge" id="tp-badge">Level 1</span>
+            <span class="task-title"       id="tp-title">Task Title</span>
+          </div>
+          <button class="task-close" onclick="closeTask()">✕ Close</button>
+        </div>
+        <div class="task-body">
+          <div class="task-progress"    id="tp-progress"></div>
+          <div class="task-objective"   id="tp-objective"></div>
+          <div class="task-prompt-label">// PROMPT ENGINEERING TASK</div>
+          <div class="task-prompt-box"  id="tp-prompt"></div>
+          <div class="task-instructions" id="tp-instructions"></div>
+          <div class="task-meta"        id="tp-meta"></div>
+
+          <!-- STUDENT PROMPTING -->
+          <div class="prompt-player">
+            <div class="prompt-status">
+              <div class="sparks-display">Sparks: <span id="sparks-count">0</span></div>
+              <div class="clear-score">CLEAR Score: <span id="clear-score">—</span></div>
+            </div>
+
+            <div class="bad-prompt-block">
+              <div class="bad-prompt-label">Example prompt (needs improvement)</div>
+              <div class="bad-prompt-box" id="bad-prompt">A better prompt will use explicit instructions, include output format, and request reasoning.</div>
+              <div class="bad-prompt-actions">
+                <button id="copy-bad-prompt" class="btn-secondary">Use this as starting point</button>
+              </div>
+            </div>
+
+            <textarea id="user-prompt" class="user-prompt" placeholder="Write your prompt here..." rows="6"></textarea>
+            <div class="prompt-actions">
+              <button id="submit-prompt" class="btn-primary">Submit Prompt</button>
+              <button id="get-hint" class="btn-secondary">Use Sparks for Hint (‑<span id="hint-cost">20</span>)</button>
+            </div>
+            <div id="hint-box" class="hint-box">Hints will appear here when purchased.</div>
+
+            <div id="prompt-feedback" class="prompt-feedback"></div>
+            <div id="prompt-history" class="prompt-history"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RUBRIC ── -->
+  <section id="rubric">
+    <div class="wrapper">
+      <div class="divider"></div>
+      <div class="section-head">
+        <div class="section-tag">// Evaluation Framework</div>
+        <h2 class="section-title">Prompt <em>Assessment Rubric</em></h2>
+        <p class="section-desc">
+          Six research-backed criteria for evaluating prompt engineering quality, each scored 1–4.
+          Maximum total score: 24 points. Click any criterion to expand its scoring guide.
+        </p>
+      </div>
+      <!-- Rubric cards injected by script.js -->
+      <div class="rubric-grid" id="rubric-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="wrapper">
+      <div class="divider"></div>
+      <div class="about-grid">
+        <div class="about-text">
+          <div class="section-head" style="margin-bottom:24px;">
+            <div class="section-tag">// Platform Overview</div>
+            <h2 class="section-title">What is <em>MetaForge?</em></h2>
+          </div>
+          <p>
+            <strong>MetaForge</strong> is a structured educational platform designed to develop
+            your prompt engineering skills through deliberate, scaffolded practice with AI systems.
+          </p>
+          <p>
+            Prompt engineering is rapidly becoming a critical skill in the AI era. MetaForge bridges
+            the gap between <strong>theoretical frameworks</strong> and <strong>hands-on practice</strong>
+            by providing structured challenges that progressively build your ability to communicate
+            complex instructions to large language models.
+          </p>
+          <p>
+            Built on Bloom's Revised Taxonomy, the platform ensures you develop a
+            <strong>complete cognitive toolkit</strong> — from foundational recall and comprehension
+            all the way to synthesis and creative generation of novel prompt structures.
+          </p>
+          <div class="about-features">
+            <div class="about-feat">
+              <div class="feat-icon">🎯</div>
+              <div class="feat-text">
+                <h5>Structured Progression</h5>
+                <p>Six levels ensure skills build systematically from simple to advanced cognitive demands.</p>
+              </div>
+            </div>
+            <div class="about-feat">
+              <div class="feat-icon">📐</div>
+              <div class="feat-text">
+                <h5>Research-Based Evaluation</h5>
+                <p>The rubric is grounded in 8 peer-reviewed sources on prompt design and AI instruction.</p>
+              </div>
+            </div>
+            <div class="about-feat">
+              <div class="feat-icon">⚡</div>
+              <div class="feat-text">
+                <h5>Immediate Practice</h5>
+                <p>No setup required — select a level, read the task, write your prompt, and self-evaluate.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="taxonomy-visual">
+            <div class="section-tag" style="margin-bottom:20px;">Bloom's Taxonomy Difficulty Scale</div>
+            <!-- Taxonomy bars injected by script.js -->
+            <div id="tax-visual"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">MetaForge</div>
+      <div class="footer-sub">
+        Prompt Engineering Training Platform · Built for educators and learners · Grounded in research
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main script (ES module) -->
+  <script type="module" src="js/script.js"></script>
+
+</body>
+</html>
