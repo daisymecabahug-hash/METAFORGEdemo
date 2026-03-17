@@ -542,6 +542,8 @@ const TAX_DATA = [
 const STATE_KEY = 'metaforge_state_v2';
 const SPARKS_PER_ATTEMPT = 12;
 const SPARKS_FOR_HINT = 20;
+const SPARKS_FOR_EXAMPLE = 30;
+const SPARKS_FOR_DEEP_REVIEW = 30;
 const SPARKS_PER_LEVEL = 80;
 
 const DEFAULT_STATE = {
@@ -549,7 +551,7 @@ const DEFAULT_STATE = {
   progress: 0,
   unlockedLevels: [1],
   promptHistory: {},
-  hintsUnlocked: {},
+  storeUnlocked: {},
   achievements: [],
   lastUpdated: Date.now()
 };
@@ -598,7 +600,7 @@ function mergeState(primary, incoming) {
       .slice(0, 30); // keep last 30 entries per level
   });
 
-  merged.hintsUnlocked = { ...(primary.hintsUnlocked || {}), ...(incoming.hintsUnlocked || {}) };
+  merged.storeUnlocked = { ...(primary.storeUnlocked || {}), ...(incoming.storeUnlocked || {}) };
   merged.achievements = Array.from(new Set([...(primary.achievements || []), ...(incoming.achievements || [])]));
   merged.lastUpdated = Date.now();
   return merged;
@@ -826,7 +828,16 @@ function applyPromptFeedback(score, lv) {
   `;
 }
 
+function isLoggedIn() {
+  return !!currentUser && !!currentUser.uid && !currentUser.isGuest;
+}
+
 function handlePromptSubmit(lv, scenario) {
+  if (!isLoggedIn()) {
+    alert('Please sign in to submit prompts and earn Sparks.');
+    return;
+  }
+
   const promptEl = document.getElementById('user-prompt');
   const promptText = promptEl?.value.trim() || '';
   if (!promptText) {
@@ -859,52 +870,132 @@ function handlePromptSubmit(lv, scenario) {
   showAchievement('Nice work!', `You earned ${SPARKS_PER_ATTEMPT} Sparks (CLEAR score: ${score.total}/20).`);
 }
 
-function handleHintRequest(lv, scenarioIndex = 0) {
+function makeStoreKey(item, lvId, scenarioIndex) {
+  return `${item}:${lvId}:${scenarioIndex}`;
+}
+
+function isStoreUnlocked(key) {
+  return !!(currentState?.storeUnlocked && currentState.storeUnlocked[key]);
+}
+
+function unlockStoreItem(key) {
   if (!currentState) return;
-  const hintKey = `hint:${lv.id}:${scenarioIndex}`;
-  const alreadyUnlocked = currentState.hintsUnlocked?.[hintKey];
+  currentState.storeUnlocked = currentState.storeUnlocked || {};
+  currentState.storeUnlocked[key] = true;
+  saveState();
+}
 
-  if (!alreadyUnlocked) {
-    const currentSparks = currentState.sparks || 0;
-    if (currentSparks < SPARKS_FOR_HINT) {
-      alert('Not enough sparks — try submitting prompts to earn more.');
-      return;
-    }
-
-    currentState.sparks = currentSparks - SPARKS_FOR_HINT;
-    currentState.hintsUnlocked = currentState.hintsUnlocked || {};
-    currentState.hintsUnlocked[hintKey] = true;
-    saveState();
-    updateSparksUI();
-
-    showAchievement('Hint unlocked!', `Hint revealed for Level ${lv.id}.`);
+function purchaseStoreItem(itemKey, cost, lv, scenarioIndex, onUnlock) {
+  if (!isLoggedIn()) {
+    alert('Please sign in to use Sparks and unlock store options.');
+    return;
+  }
+  if (!currentState) return;
+  const key = makeStoreKey(itemKey, lv.id, scenarioIndex);
+  if (isStoreUnlocked(key)) {
+    onUnlock();
+    return;
   }
 
-  const hintBox = document.getElementById('hint-box');
-  const scenarios = lv.scenarios || [lv.task];
-  const scenario = scenarios[scenarioIndex] || scenarios[0];
-  if (hintBox) {
-    hintBox.textContent = scenario.hint || 'Try focusing on the key output format and what exact details the AI should include.';
+  const currentSparks = currentState.sparks || 0;
+  if (currentSparks < cost) {
+    alert('Not enough sparks — submit prompts to earn more.');
+    return;
   }
+
+  currentState.sparks = currentSparks - cost;
+  unlockStoreItem(key);
+  updateSparksUI();
+  onUnlock();
+  showAchievement('Purchased', `Unlocked ${itemKey} for this task.`);
+}
+
+function updateSparkShopUI(lv, scenarioIndex) {
+  const hintKey = makeStoreKey('hint', lv.id, scenarioIndex);
+  const exampleKey = makeStoreKey('example', lv.id, scenarioIndex);
+  const reviewKey = makeStoreKey('review', lv.id, scenarioIndex);
+
+  const hintUnlocked = isStoreUnlocked(hintKey);
+  const exampleUnlocked = isStoreUnlocked(exampleKey);
+  const reviewUnlocked = isStoreUnlocked(reviewKey);
 
   const hintBtn = document.getElementById('get-hint');
+  const exampleBtn = document.getElementById('get-example');
+  const reviewBtn = document.getElementById('get-review');
+
   if (hintBtn) {
-    hintBtn.textContent = 'Hint Unlocked';
-    hintBtn.disabled = true;
+    hintBtn.textContent = hintUnlocked ? 'Hint Unlocked' : `Use Sparks for Hint (‑${SPARKS_FOR_HINT})`;
+    hintBtn.disabled = !!hintUnlocked;
   }
+  if (exampleBtn) {
+    exampleBtn.textContent = exampleUnlocked ? 'Example Unlocked' : `Get Example Prompt (‑${SPARKS_FOR_EXAMPLE})`;
+    exampleBtn.disabled = !!exampleUnlocked;
+  }
+  if (reviewBtn) {
+    reviewBtn.textContent = reviewUnlocked ? 'Review Unlocked' : `Deep Review (‑${SPARKS_FOR_DEEP_REVIEW})`;
+    reviewBtn.disabled = !!reviewUnlocked;
+  }
+}
+
+function handleHintRequest(lv, scenarioIndex = 0) {
+  const itemKey = 'hint';
+  const key = makeStoreKey(itemKey, lv.id, scenarioIndex);
+  purchaseStoreItem(itemKey, SPARKS_FOR_HINT, lv, scenarioIndex, () => {
+    const hintBox = document.getElementById('hint-box');
+    const scenarios = lv.scenarios || [lv.task];
+    const scenario = scenarios[scenarioIndex] || scenarios[0];
+    if (hintBox) {
+      hintBox.textContent = scenario.hint || 'Try focusing on the key output format and what exact details the AI should include.';
+    }
+    updateSparkShopUI(lv, scenarioIndex);
+  });
+}
+
+function handleExampleRequest(lv, scenarioIndex = 0) {
+  const itemKey = 'example';
+  purchaseStoreItem(itemKey, SPARKS_FOR_EXAMPLE, lv, scenarioIndex, () => {
+    const promptEl = document.getElementById('user-prompt');
+    const scenarios = lv.scenarios || [lv.task];
+    const scenario = scenarios[scenarioIndex] || scenarios[0];
+    if (promptEl) {
+      promptEl.value = scenario.examplePrompt || scenario.prompt || '';
+    }
+    updateSparkShopUI(lv, scenarioIndex);
+  });
+}
+
+function handleReviewRequest(lv, scenarioIndex = 0) {
+  const itemKey = 'review';
+  purchaseStoreItem(itemKey, SPARKS_FOR_DEEP_REVIEW, lv, scenarioIndex, () => {
+    const hintBox = document.getElementById('hint-box');
+    const scoreEl = document.getElementById('clear-score');
+    if (hintBox) {
+      hintBox.textContent = 'Review unlocked: Compare your prompt against the task objective and ask yourself how it could be more explicit, more structured, and more reflective.';
+    }
+    if (scoreEl) {
+      scoreEl.textContent = 'Review Mode';
+    }
+    updateSparkShopUI(lv, scenarioIndex);
+  });
 }
 
 function setupPromptPlayer(lv, scenario, scenarioIndex = 0) {
   const promptEl = document.getElementById('user-prompt');
   const submitBtn = document.getElementById('submit-prompt');
   const hintBtn = document.getElementById('get-hint');
+  const exampleBtn = document.getElementById('get-example');
+  const reviewBtn = document.getElementById('get-review');
   const hintCost = document.getElementById('hint-cost');
+  const exampleCost = document.getElementById('example-cost');
+  const reviewCost = document.getElementById('review-cost');
   const hintBox = document.getElementById('hint-box');
   const copyBadPromptBtn = document.getElementById('copy-bad-prompt');
 
   if (promptEl) promptEl.value = '';
   if (hintBox) hintBox.textContent = 'Hints will appear here when purchased.';
   if (hintCost) hintCost.textContent = String(SPARKS_FOR_HINT);
+  if (exampleCost) exampleCost.textContent = String(SPARKS_FOR_EXAMPLE);
+  if (reviewCost) reviewCost.textContent = String(SPARKS_FOR_DEEP_REVIEW);
   updateSparksUI();
   updateClearScore(null);
 
@@ -916,12 +1007,15 @@ function setupPromptPlayer(lv, scenario, scenarioIndex = 0) {
     hintBtn.onclick = () => handleHintRequest(lv, scenarioIndex);
   }
 
-  const hintKey = `hint:${lv.id}:${scenarioIndex}`;
-  const hintUnlocked = currentState?.hintsUnlocked?.[hintKey];
-  if (hintBtn) {
-    hintBtn.textContent = hintUnlocked ? 'Hint Unlocked' : `Use Sparks for Hint (‑${SPARKS_FOR_HINT})`;
-    hintBtn.disabled = !!hintUnlocked;
+  if (exampleBtn) {
+    exampleBtn.onclick = () => handleExampleRequest(lv, scenarioIndex);
   }
+
+  if (reviewBtn) {
+    reviewBtn.onclick = () => handleReviewRequest(lv, scenarioIndex);
+  }
+
+  updateSparkShopUI(lv, scenarioIndex);
 
   if (copyBadPromptBtn) {
     copyBadPromptBtn.onclick = () => {
@@ -960,6 +1054,11 @@ LEVELS.forEach((lv, i) => {
    TASK PANEL
 ═══════════════════════════════════════════════ */
 function openTask(lv, card, scenarioIndex = 0) {
+  if (!isLoggedIn()) {
+    alert('Sign in to access tasks and earn Sparks.');
+    return;
+  }
+
   if (!isLevelUnlocked(lv.id)) {
     const needed = Math.max(0, (lv.id - 1) * SPARKS_PER_LEVEL - (currentState?.sparks || 0));
     showAchievement('Locked', `Earn ${needed} more Sparks to unlock Level ${lv.id}.`);
@@ -1121,6 +1220,13 @@ function setAuthUIState({ message, showForms = false, showSignedIn = false, emai
     }
   }
 
+  // When auth changes, update whether tasks can be accessed
+  const startTasksBtn = document.getElementById('start-tasks-btn');
+  if (startTasksBtn) {
+    startTasksBtn.disabled = !showSignedIn;
+    startTasksBtn.textContent = showSignedIn ? 'Go to Prompt Tasks →' : 'Sign in to begin';
+  }
+
   if (navAuthBtn) {
     if (showSignedIn) {
       navAuthBtn.textContent = 'Sign out';
@@ -1133,6 +1239,12 @@ function setAuthUIState({ message, showForms = false, showSignedIn = false, emai
 }
 
 function showSection(sectionId) {
+  if ((sectionId === 'intro' || sectionId === 'levels') && !isLoggedIn()) {
+    alert('Please sign in to explore the training tasks and earn Sparks.');
+    showSection('hero');
+    return;
+  }
+
   ['hero', 'intro', 'levels'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1235,17 +1347,53 @@ function initializeAuthUI() {
     });
   }
 
+  // Make nav links behave like SPA sections
+  document.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', (evt) => {
+      const targetId = a.getAttribute('href')?.replace('#', '');
+      if (!targetId) return;
+      evt.preventDefault();
+      if (targetId === 'hero') {
+        showSection('hero');
+      } else if (targetId === 'levels') {
+        showLevelsSection();
+      } else if (targetId === 'about') {
+        showSection('intro');
+        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
   if (startIntroBtn) {
     startIntroBtn.addEventListener('click', () => {
       showIntroSection();
+      updateStartTasksState();
     });
   }
 
   if (startTasksBtn) {
     startTasksBtn.addEventListener('click', () => {
+      if (!isLoggedIn()) {
+        alert('Sign in to access the tasks and earn Sparks.');
+        return;
+      }
       showLevelsSection();
     });
   }
+
+  function updateStartTasksState() {
+    const startTasksBtn = document.getElementById('start-tasks-btn');
+    if (!startTasksBtn) return;
+    if (isLoggedIn()) {
+      startTasksBtn.disabled = false;
+      startTasksBtn.textContent = 'Go to Prompt Tasks →';
+    } else {
+      startTasksBtn.disabled = true;
+      startTasksBtn.textContent = 'Sign in to begin';
+    }
+  }
+
+  updateStartTasksState();
 }
 
 async function initApp() {
