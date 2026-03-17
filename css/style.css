@@ -642,6 +642,11 @@ nav {
   padding: 8px 14px;
   font-size: 0.85rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  text-align: center;
 }
 
 .sparks-next {
