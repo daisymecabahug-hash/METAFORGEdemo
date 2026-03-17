@@ -838,11 +838,13 @@ document.querySelectorAll('.level-card, .rubric-card').forEach(el => {
   animObserver.observe(el);
 });
 
-function setAuthUIState({ message, showForms = false, showSignedIn = false, email = '' }) {
+function setAuthUIState({ message, showForms = false, showSignedIn = false, email = '', isGuest = false }) {
   const status = document.getElementById('auth-status');
   const forms = document.getElementById('auth-forms');
   const signedIn = document.getElementById('auth-signed-in');
   const userEmail = document.getElementById('user-email');
+  const navAuthText = document.getElementById('nav-auth-text');
+  const navAuthBtn = document.getElementById('nav-auth-btn');
 
   if (status) {
     const msgEl = status.querySelector('.auth-message');
@@ -852,6 +854,26 @@ function setAuthUIState({ message, showForms = false, showSignedIn = false, emai
   if (forms) forms.classList.toggle('hidden', !showForms);
   if (signedIn) signedIn.classList.toggle('hidden', !showSignedIn);
   if (userEmail) userEmail.textContent = email || '—';
+
+  if (navAuthText) {
+    if (showSignedIn) {
+      navAuthText.textContent = `Signed in as ${email || '…'}`;
+    } else if (isGuest) {
+      navAuthText.textContent = 'Guest (progress saved locally)';
+    } else {
+      navAuthText.textContent = 'Not signed in';
+    }
+  }
+
+  if (navAuthBtn) {
+    if (showSignedIn) {
+      navAuthBtn.textContent = 'Sign out';
+      navAuthBtn.dataset.authState = 'signed-in';
+    } else {
+      navAuthBtn.textContent = 'Sign in';
+      navAuthBtn.dataset.authState = 'signed-out';
+    }
+  }
 }
 
 function initializeAuthUI() {
@@ -895,7 +917,12 @@ function initializeAuthUI() {
   if (guestBtn) {
     guestBtn.addEventListener('click', async () => {
       currentUser = { uid: null, email: null, isGuest: true };
-      setAuthUIState({ message: 'Playing as guest. Progress is saved locally.', showForms: true, showSignedIn: false });
+      setAuthUIState({
+        message: 'Playing as guest. Progress is saved locally.',
+        showForms: true,
+        showSignedIn: false,
+        isGuest: true
+      });
       await loadState();
       updateUIWithProgress();
     });
@@ -910,6 +937,27 @@ function initializeAuthUI() {
       }
     });
   }
+
+  const navAuthBtn = document.getElementById('nav-auth-btn');
+  if (navAuthBtn) {
+    navAuthBtn.addEventListener('click', async () => {
+      if (navAuthBtn.dataset.authState === 'signed-in') {
+        try {
+          await firebaseSignOut();
+        } catch (e) {
+          console.warn('Sign-out failed:', e);
+        }
+      } else {
+        setAuthUIState({
+          message: 'Please sign in or create an account to save progress.',
+          showForms: true,
+          showSignedIn: false,
+          isGuest: false
+        });
+        document.getElementById('login-email')?.focus();
+      }
+    });
+  }
 }
 
 async function initApp() {
@@ -919,7 +967,8 @@ async function initApp() {
     setAuthUIState({
       message: 'Firebase not configured. Progress is stored locally in this browser. To enable cloud sync, add a Firebase config in firebase.config.js or set window.FIREBASE_CONFIG.',
       showForms: true,
-      showSignedIn: false
+      showSignedIn: false,
+      isGuest: true
     });
     currentUser = { uid: null, email: null, isGuest: true };
     await loadState();
@@ -945,7 +994,8 @@ async function initApp() {
       setAuthUIState({
         message: 'Not signed in. You can continue as a guest or sign in to save progress across devices.',
         showForms: true,
-        showSignedIn: false
+        showSignedIn: false,
+        isGuest: false
       });
       await loadState();
       updateUIWithProgress();

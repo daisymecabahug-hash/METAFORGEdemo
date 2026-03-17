@@ -136,6 +136,22 @@ nav {
   padding: 4px 12px; border-radius: 20px; letter-spacing: 0.05em;
 }
 
+.nav-auth {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.nav-auth button {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
 /* ── HERO ── */
 #hero { padding: 100px 0 80px; position: relative; }
 
