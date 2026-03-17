@@ -35,7 +35,6 @@
       <ul class="nav-links">
         <li><a href="#hero">Home</a></li>
         <li><a href="#levels">Levels</a></li>
-        <li><a href="#rubric">Rubric</a></li>
         <li><a href="#about">About</a></li>
       </ul>
       <div class="nav-badge">Bloom's Taxonomy</div>
@@ -60,13 +59,13 @@
       <p class="hero-sub">
         MetaForge is a structured learning environment where you master the art of communicating
         with AI systems. Practice across six cognitive levels — from basic recall to complex
-        creation — and measure your progress with a research-based rubric.
+        creation — and measure your progress with the CLEAR scoring framework.
       </p>
 
       <!-- AUTH / USER STATE -->
       <div id="auth-section">
         <div id="auth-status" class="auth-status">
-          <div class="auth-message">Loading account state…</div>
+          <div class="auth-message">Sign in or continue as guest to start learning.</div>
         </div>
 
         <div id="auth-forms" class="auth-forms hidden">
@@ -110,28 +109,71 @@
           </div>
         </div>
         <div class="stat">
-          <div class="stat-num">6</div>
-          <div class="stat-label">Rubric Criteria</div>
+          <div class="stat-num">CLEAR</div>
+          <div class="stat-label">Scoring System</div>
         </div>
         <div class="stat">
-          <div class="stat-num">8</div>
-          <div class="stat-label">Research Sources</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">24</div>
-          <div class="stat-label">Max Score</div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Practice-based</div>
         </div>
       </div>
 
       <div class="hero-cta-row">
-        <a href="#levels" class="btn-primary">Start Practicing →</a>
-        <a href="#rubric" class="btn-secondary">View Rubric</a>
+        <button id="start-intro-btn" class="btn-primary">Start Learning →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INTRODUCTION ── -->
+  <section id="intro" class="hidden">
+    <div class="wrapper">
+      <div class="section-head">
+        <div class="section-tag">// What is Prompt Engineering?</div>
+        <h2 class="section-title">Learn to write prompts that work</h2>
+        <p class="section-desc">
+          Prompt engineering is about crafting clear, logical, and adaptive instructions that guide AI systems to produce useful results.
+          Start by reading the short overview below, then move into hands-on practice with real prompt tasks.
+        </p>
+      </div>
+
+      <div class="intro-grid">
+        <div class="intro-text">
+          <h3>How you learn here</h3>
+          <ul>
+            <li>Read a task scenario and goal.</li>
+            <li>Analyze key requirements and organize your ideas.</li>
+            <li>Write your own prompt in the box below.</li>
+            <li>Submit it to get a score and learn how to improve.</li>
+          </ul>
+
+          <h3>The CLEAR scoring framework</h3>
+          <p>
+            Your prompt is evaluated across five dimensions: <strong>Concise</strong>, <strong>Logical</strong>, <strong>Explicit</strong>, <strong>Adaptive</strong>, and <strong>Reflective</strong>.
+            Each dimension is scored 0–4, for a total of 20 points.
+          </p>
+
+          <div class="intro-actions">
+            <button id="start-tasks-btn" class="btn-primary">Go to Prompt Tasks →</button>
+          </div>
+        </div>
+
+        <div class="intro-visual">
+          <div class="intro-box">
+            <h4>Prompt task example</h4>
+            <p>
+              <em>Task:</em> Design a prompt that asks an AI to write a short persuasive email encouraging a friend to try a new productivity app.
+            </p>
+            <p>
+              Your prompt should be clear about the tone, target audience, and required structure (e.g., greeting, benefits list, call to action).
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ── LEVELS ── -->
-  <section id="levels">
+  <section id="levels" class="hidden">
     <div class="wrapper">
       <div class="divider"></div>
       <div class="section-head">
@@ -157,6 +199,7 @@
         </div>
         <div class="task-body">
           <div class="task-progress"    id="tp-progress"></div>
+          <div class="scenario-selector" id="scenario-selector"></div>
           <div class="task-objective"   id="tp-objective"></div>
           <div class="task-prompt-label">// PROMPT ENGINEERING TASK</div>
           <div class="task-prompt-box"  id="tp-prompt"></div>
@@ -166,7 +209,10 @@
           <!-- STUDENT PROMPTING -->
           <div class="prompt-player">
             <div class="prompt-status">
-              <div class="sparks-display">Sparks: <span id="sparks-count">0</span></div>
+              <div class="sparks-display">
+                Sparks: <span id="sparks-count">0</span>
+                <span class="sparks-next" id="sparks-next"></span>
+              </div>
               <div class="clear-score">CLEAR Score: <span id="clear-score">—</span></div>
             </div>
 
@@ -190,23 +236,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ── RUBRIC ── -->
-  <section id="rubric">
-    <div class="wrapper">
-      <div class="divider"></div>
-      <div class="section-head">
-        <div class="section-tag">// Evaluation Framework</div>
-        <h2 class="section-title">Prompt <em>Assessment Rubric</em></h2>
-        <p class="section-desc">
-          Six research-backed criteria for evaluating prompt engineering quality, each scored 1–4.
-          Maximum total score: 24 points. Click any criterion to expand its scoring guide.
-        </p>
-      </div>
-      <!-- Rubric cards injected by script.js -->
-      <div class="rubric-grid" id="rubric-grid"></div>
     </div>
   </section>
 
@@ -246,8 +275,8 @@
             <div class="about-feat">
               <div class="feat-icon">📐</div>
               <div class="feat-text">
-                <h5>Research-Based Evaluation</h5>
-                <p>The rubric is grounded in 8 peer-reviewed sources on prompt design and AI instruction.</p>
+                <h5>Reflective Feedback</h5>
+                <p>Receive CLEAR-aligned scoring and insights that guide iterative improvement of your prompts.</p>
               </div>
             </div>
             <div class="about-feat">

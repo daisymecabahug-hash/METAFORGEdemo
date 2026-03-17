@@ -32,6 +32,65 @@ const LEVELS = [
     icon: "💡",
     tagline: "Recall & Recognize",
     desc: "Construct prompts that ask AI to retrieve, list, or identify factual information. Focus on clarity and precision in defining the scope of recall.",
+    scenarios: [
+      {
+        title: "Definitions List",
+        objective: "Create a prompt that asks the AI to list and define key terms in a specific domain.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou are studying for an AI literacy exam covering fundamental concepts in machine learning.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt to an AI system that will cause it to generate a structured list of <span class="hl3">10 foundational machine learning terms</span> with their definitions.\n\nYour prompt should specify:\n• The <span class="hl">domain</span> (machine learning fundamentals)\n• The <span class="hl">number</span> of terms (exactly 10)\n• The <span class="hl">format</span> expected for each entry\n• The <span class="hl">difficulty level</span> (beginner-friendly)`,
+        instructions: [
+          "Be explicit about exactly what information you want recalled.",
+          "Specify the format — numbered list, table, or structured output.",
+          "Avoid vague language — the AI should not have to guess what 'foundational' means.",
+          "Use the CLEAR scoring framework (Concise, Logical, Explicit, Adaptive, Reflective) to self-assess your prompt."
+        ],
+        time: "10–15 min",
+        difficulty: "Beginner",
+        focus: "Explicitness · Format Guidance",
+        hint: "Try focusing on the info you want the AI to return: specify the number of items, the level of detail, and the output format (e.g., list, table).",
+      },
+      {
+        title: "Fact Retrieval",
+        objective: "Prompt the AI to extract key facts from a short passage and present them as bullet points.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have a paragraph describing a scientific discovery.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt to an AI assistant that asks it to list the <span class="hl3">five most important facts</span> from the paragraph in bullet form and specify the format for each bullet.`,
+        instructions: [
+          "Specify how many facts are needed and the output format (e.g., bullet list).",
+          "Be clear about what counts as an 'important' fact in this context.",
+          "Use CLEAR scoring to check that your prompt is concise and explicit."
+        ],
+        time: "8–12 min",
+        difficulty: "Beginner",
+        focus: "Clarity · Output Structure",
+        hint: "Tell the AI exactly how you want the bullets formatted (e.g., short sentence, term + detail).",
+      },
+      {
+        title: "Topic Comparison",
+        objective: "Create a prompt that directs the AI to compare two related concepts and highlight key differences.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou're studying two popular machine learning approaches.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to compare <span class="hl3">supervised learning</span> and <span class="hl3">unsupervised learning</span> in a table, listing at least three differences and one shared characteristic.`,
+        instructions: [
+          "Specify the comparison structure (e.g., table with columns).",
+          "Be explicit about the number of differences and the shared characteristic.",
+          "Use CLEAR scoring to evaluate how explicit and structured your prompt is."
+        ],
+        time: "12–18 min",
+        difficulty: "Beginner",
+        focus: "Structure · Explicitness",
+        hint: "Include the word 'compare' and request a tabular format with labeled columns.",
+      },
+      {
+        title: "Problem Definition",
+        objective: "Write a prompt that tells the AI to define a problem and list steps to solve it.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA team needs help identifying why their recommendation system is underperforming.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to describe the most likely causes and list a 3‑step plan to diagnose the issue.`,
+        instructions: [
+          "Describe what output format you expect (e.g., numbered plan).",
+          "Be clear about the context and the audience for the response.",
+          "Use CLEAR scoring to ensure your prompt is adaptive and actionable."
+        ],
+        time: "12–20 min",
+        difficulty: "Beginner",
+        focus: "Adaptive · Logical",
+        hint: "Mention who will act on the response (e.g., data engineer, analyst) so the AI tailors the output.",
+      }
+    ],
     task: {
       title: "The Definition Task",
       objective: "Write a prompt that instructs an AI to recall and list key definitions and terminology. Your prompt should specify the domain, the number of terms expected, and the format of the output.",
@@ -41,7 +100,7 @@ const LEVELS = [
         "Be explicit about exactly what information you want recalled.",
         "Specify the format — numbered list, table, or structured output.",
         "Avoid vague language — the AI should not have to guess what 'foundational' means.",
-        "Evaluate your prompt using the rubric below. Focus on Criteria 1 and 5."
+        "Use the CLEAR scoring framework (Concise, Logical, Explicit, Adaptive, Reflective) to self-assess your prompt."
       ],
       time: "10–15 min",
       difficulty: "Beginner",
@@ -56,6 +115,65 @@ const LEVELS = [
     icon: "🔍",
     tagline: "Explain & Interpret",
     desc: "Craft prompts that require the AI to summarize, paraphrase, classify, or explain concepts clearly in language appropriate to a specific audience.",
+    scenarios: [
+      {
+        title: "Audience-Based Explanation",
+        objective: "Write a prompt that asks the AI to explain a technical topic in language tailored to a specific audience.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou're creating study material for high school students who have no prior coding experience.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to explain <span class="hl3">how neural networks learn</span> to a non-technical audience.\n\nYour prompt should include:\n• <span class="hl">Audience definition</span> (age group, background)\n• A request for an <span class="hl">analogy</span> to make the concept relatable\n• <span class="hl">Length constraints</span> (e.g., 200–250 words)\n• Instruction to <span class="hl">avoid jargon</span> or define any technical term used\n• A <span class="hl">summary sentence</span> at the end`,
+        instructions: [
+          "Define the audience clearly — don't just say 'explain simply'.",
+          "Include explicit instructions about analogies and examples.",
+          "Check if the output would be understandable to the stated audience.",
+          "Use CLEAR scoring to ensure your prompt is explicit and adaptive."
+        ],
+        time: "15–20 min",
+        difficulty: "Beginner–Intermediate",
+        focus: "Clarity · Audience Alignment",
+        hint: "Specify the audience and tone, and ask the AI to avoid jargon or explain terms."
+      },
+      {
+        title: "Guided Summary",
+        objective: "Create a prompt that asks the AI to summarize a long text into three key points with a short explanation.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have a paragraph about the history of the internet.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to summarize the paragraph into <span class="hl3">three main points</span> and include a one-sentence explanation for each.`,
+        instructions: [
+          "Specify the exact number of points and what each should include.",
+          "Be explicit about the format (e.g., bullet list).",
+          "Use CLEAR scoring so your prompt is concise and structured."
+        ],
+        time: "12–18 min",
+        difficulty: "Intermediate",
+        focus: "Explicitness · Structure",
+        hint: "Ask the AI to output a bulleted list with each item including a short explanation."
+      },
+      {
+        title: "Concept Comparison",
+        objective: "Write a prompt that asks the AI to compare two related ideas and highlight which is better in a given situation.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou're comparing two study techniques: active recall and passive review.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to compare the two techniques and suggest which is better for retaining information quickly. Include a short rationale.`,
+        instructions: [
+          "Specify the comparison criteria and expected output structure.",
+          "Be clear about the situation where one technique might be preferred.",
+          "Use CLEAR scoring to ensure your prompt is explicit and logical."
+        ],
+        time: "15–20 min",
+        difficulty: "Intermediate",
+        focus: "Logical · Adaptive",
+        hint: "Include the context (e.g., learning for an exam vs. long-term retention)."
+      },
+      {
+        title: "Rewrite for Audience",
+        objective: "Generate a prompt that asks the AI to rewrite a given paragraph for a different audience (e.g., from expert to beginner).",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have a technical paragraph on machine learning optimization methods.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to rewrite the paragraph for a <span class="hl3">novice audience</span> and include a short explanation of why the changes were made.`,
+        instructions: [
+          "Specify the original and target audiences clearly.",
+          "Ask the AI to explain the reasoning behind its rewriting choices.",
+          "Use CLEAR scoring to check for explicitness and reflection."
+        ],
+        time: "15–20 min",
+        difficulty: "Intermediate",
+        focus: "Adaptive · Reflective",
+        hint: "Ask the AI to highlight what changed in the rewrite and why."
+      }
+    ],
     task: {
       title: "The Concept Translator",
       objective: "Write a prompt that directs an AI to explain a complex concept in accessible language. Your prompt must define the audience, depth of explanation, and use of analogies.",
@@ -65,7 +183,7 @@ const LEVELS = [
         "Include explicit instructions about analogies and examples.",
         "Test whether your prompt would produce output a 16-year-old could understand.",
         "Check: Does your prompt address format (paragraph length, no jargon, summary)?",
-        "Self-evaluate using Rubric Criteria 1, 2, and 4."
+        "Self-evaluate using the CLEAR framework: be concise, explicit, and aligned with the task." 
       ],
       time: "15–20 min",
       difficulty: "Beginner–Intermediate",
@@ -80,6 +198,64 @@ const LEVELS = [
     icon: "⚙️",
     tagline: "Use & Execute",
     desc: "Design prompts that require AI to solve a specific real-world problem by applying known procedures, methods, or domain knowledge in a new context.",
+    scenarios: [
+      {
+        title: "Action Plan Builder",
+        objective: "Write a prompt that asks the AI to develop a step-by-step plan to solve a business challenge.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA small business wants to reduce customer churn.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to create a <span class="hl3">30-day customer retention plan</span> with weekly milestones and measurable actions.`,
+        instructions: [
+          "Specify output structure (e.g., week-by-week list).",
+          "Include constraints like budget, timeline, or resources.",
+          "Use CLEAR scoring to ensure the prompt is explicit and actionable."
+        ],
+        time: "20–25 min",
+        difficulty: "Intermediate",
+        focus: "Role Prompting · Constraints",
+        hint: "Mention who will use the plan and any budget or time limits."
+      },
+      {
+        title: "Persona-driven Solution",
+        objective: "Ask the AI to act as a specific expert and solve a problem using that perspective.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA team is building an app and needs a security checklist.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI, acting as a cybersecurity analyst, to provide a checklist of vulnerabilities to review.`,
+        instructions: [
+          "Define the role explicitly (e.g., cybersecurity analyst).",
+          "Specify the expected format (e.g., checklist with brief explanations).",
+          "Use CLEAR scoring to check for explicit role and output structure."
+        ],
+        time: "20–25 min",
+        difficulty: "Intermediate",
+        focus: "Role Prompting · Structure",
+        hint: "Include the target audience for the checklist and any compliance standards to consider."
+      },
+      {
+        title: "Constraint-Based Design",
+        objective: "Craft a prompt that asks the AI to propose a solution under specific constraints.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA student needs a study plan that fits into 30 minutes per day.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to design a daily study schedule that maximizes retention within a <span class="hl3">30-minute daily limit</span>.`,
+        instructions: [
+          "State the constraint clearly (e.g., time limit, budget).",
+          "Ask for a structured output (e.g., schedule per day).",
+          "Use CLEAR scoring to ensure the prompt is concise and adaptive."
+        ],
+        time: "15–20 min",
+        difficulty: "Intermediate",
+        focus: "Constraints · Adaptivity",
+        hint: "Include the duration constraint and the goal (e.g., retain information quickly)."
+      },
+      {
+        title: "Template Generation",
+        objective: "Ask the AI to create a reusable prompt template for future use.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou want to create a reusable prompt for generating marketing email copy.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to generate a <span class="hl3">prompt template</span> that takes variables like product name, audience, and tone.`,
+        instructions: [
+          "Specify the variables that should be replaceable.",
+          "Ask for a clear template format (e.g., placeholders in brackets).",
+          "Use CLEAR scoring to focus on explicit and adaptable instructions."
+        ],
+        time: "15–20 min",
+        difficulty: "Intermediate",
+        focus: "Adaptivity · Explicitness",
+        hint: "Use placeholders like [PRODUCT] and [AUDIENCE] in your template."
+      }
+    ],
     task: {
       title: "The Problem Solver",
       objective: "Write a prompt that instructs an AI to solve a specific, well-defined problem using domain knowledge. Your prompt should specify context, constraints, and expected solution format.",
@@ -89,7 +265,7 @@ const LEVELS = [
         "Provide enough context so the AI doesn't make assumptions about the business.",
         "Specify each week's deliverable to break down the 30-day plan.",
         "Include a constraint (budget, time, resources) to sharpen the output.",
-        "Evaluate using Rubric Criteria 3 (strategies), 2 (specificity), and 5 (format)."
+        "Evaluate your prompt for strategy, specificity, and format using CLEAR scoring." 
       ],
       time: "20–25 min",
       difficulty: "Intermediate",
@@ -104,6 +280,64 @@ const LEVELS = [
     icon: "🧩",
     tagline: "Break Down & Compare",
     desc: "Develop prompts that require AI to differentiate, compare, contrast, categorize, or deconstruct complex information into meaningful components.",
+    scenarios: [
+      {
+        title: "Compare & Contrast",
+        objective: "Write a prompt that asks the AI to compare two concepts across defined criteria.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou need a comparison between two AI model types.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to compare <span class="hl3">GPT-style models</span> with <span class="hl3">BERT-style models</span> across multiple dimensions and present the results in a table.`,
+        instructions: [
+          "Specify exactly which dimensions to compare (e.g., architecture, use cases).",
+          "Request a structured output (table with rows or columns).",
+          "Use CLEAR scoring to ensure your prompt is explicit and logical."
+        ],
+        time: "25–30 min",
+        difficulty: "Intermediate–Advanced",
+        focus: "Structure · Logical",
+        hint: "List the comparison dimensions explicitly and ask the AI to reason step-by-step."
+      },
+      {
+        title: "Categorization Task",
+        objective: "Ask the AI to categorize a list of items into groups with explanations.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have a list of emerging technologies.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to group the items into <span class="hl3">three categories</span> and explain the reasoning for each grouping.`,
+        instructions: [
+          "Specify the number of categories and the expected output format.",
+          "Ask for a short explanation for each category decision.",
+          "Use CLEAR scoring to ensure your prompt is explicit and analytical."
+        ],
+        time: "25–30 min",
+        difficulty: "Intermediate–Advanced",
+        focus: "Analysis · Explicitness",
+        hint: "Ask the AI to label each group and justify why items belong together."
+      },
+      {
+        title: "Decomposition Challenge",
+        objective: "Create a prompt that asks the AI to break a complex problem into smaller steps.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA team is planning a product launch.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to decompose the launch into <span class="hl3">key phases</span> and list the main tasks for each phase.`,
+        instructions: [
+          "Request a clear phased structure in the output.",
+          "State the type of project and desired level of detail.",
+          "Use CLEAR scoring to ensure your prompt is logical and organized."
+        ],
+        time: "25–30 min",
+        difficulty: "Advanced",
+        focus: "Logical · Structure",
+        hint: "Ask for a numbered set of phases with bullet points for tasks."
+      },
+      {
+        title: "Critical Comparison",
+        objective: "Ask the AI to evaluate two approaches and recommend one with justification.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou are deciding between two product designs.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to compare the pros and cons of each design and recommend which one to pursue, including reasoning.`,
+        instructions: [
+          "Ask for a side-by-side comparison and a final recommendation.",
+          "Mention which criteria are most important (e.g., usability, cost).",
+          "Use CLEAR scoring to check for explicit reasoning and analysis."
+        ],
+        time: "25–30 min",
+        difficulty: "Advanced",
+        focus: "Analysis · Reflective",
+        hint: "Ask the AI to state its assumptions and how it weighed them."
+      }
+    ],
     task: {
       title: "The Comparative Analyst",
       objective: "Write a prompt that instructs an AI to analyze and compare two or more subjects across multiple structured dimensions. Your prompt must specify the comparison criteria and output structure.",
@@ -113,7 +347,7 @@ const LEVELS = [
         "Request chain-of-thought: 'Before generating the table, reason through each dimension.'",
         "Specify the output structure: table first, then synthesis paragraph.",
         "Identify which criteria produce genuinely distinct separation between the two subjects.",
-        "Evaluate using Rubric Criteria 3 (strategies), 5 (output format), and 6 (cognitive demand)."
+        "Evaluate your prompt for strategy, output structure, and cognitive demand using CLEAR." 
       ],
       time: "25–30 min",
       difficulty: "Intermediate–Advanced",
@@ -128,6 +362,64 @@ const LEVELS = [
     icon: "⚖️",
     tagline: "Judge & Critique",
     desc: "Engineer prompts that direct AI to judge, assess, rank, or critique outputs based on explicit criteria — producing reasoned evaluative conclusions.",
+    scenarios: [
+      {
+        title: "Rank & Recommend",
+        objective: "Write a prompt asking the AI to rank a set of options against explicit criteria and recommend the best one.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYour team is choosing a programming language for a beginner course.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to rank Python, JavaScript, and Java based on criteria like readability, ecosystem, and employability, then recommend one.`,
+        instructions: [
+          "Specify the evaluation criteria and their importance.",
+          "Ask for a ranking table and a final recommendation with justification.",
+          "Use CLEAR scoring to ensure your prompt is explicit and reflective."
+        ],
+        time: "30–35 min",
+        difficulty: "Advanced",
+        focus: "Evaluation · Justification",
+        hint: "Ask the AI to acknowledge trade-offs and include counterarguments."
+      },
+      {
+        title: "Strengths & Weaknesses",
+        objective: "Ask the AI to critique a set of options and highlight their strengths and weaknesses.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA project team is considering three data visualization libraries.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to analyze each library, list strengths and weaknesses, and suggest the best fit for a beginner audience.`,
+        instructions: [
+          "Specify the audience and the evaluation criteria.",
+          "Ask the AI to provide a clear comparison format (e.g., table).",
+          "Use CLEAR scoring to ensure your prompt is detailed and analytical."
+        ],
+        time: "30–35 min",
+        difficulty: "Advanced",
+        focus: "Analysis · Reflective",
+        hint: "Request a final verdict and a short note on why it was chosen."
+      },
+      {
+        title: "Feedback Loop",
+        objective: "Create a prompt that asks the AI to evaluate an output and suggest improvements.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have an example marketing email draft.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to critique the draft and provide a revised version with explanations for changes.`,
+        instructions: [
+          "Tell the AI to provide both critique and a rewritten version.",
+          "Be clear about the desired tone and audience.",
+          "Use CLEAR scoring to make the prompt adaptive and reflective."
+        ],
+        time: "30–35 min",
+        difficulty: "Advanced",
+        focus: "Reflective · Adaptive",
+        hint: "Ask the AI to explain why each change improves the draft."
+      },
+      {
+        title: "Method Comparison",
+        objective: "Ask the AI to evaluate two approaches and describe when each is preferable.",
+        prompt: `<span class="hl">// SCENARIO</span>\nA team is choosing between two project management styles.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to compare Agile vs. Waterfall and recommend which is better for a small startup, including rationale.`,
+        instructions: [
+          "Specify the context (startup, team size, timeline).",
+          "Ask for pros/cons and a final recommendation.",
+          "Use CLEAR scoring to ensure the prompt is explicit and aligned with the objective."
+        ],
+        time: "30–35 min",
+        difficulty: "Advanced",
+        focus: "Evaluation · Alignment",
+        hint: "Ask the AI to cite key trade-offs and where each method excels."
+      }
+    ],
     task: {
       title: "The Critical Evaluator",
       objective: "Write a prompt that asks an AI to evaluate and rank multiple options against explicit criteria, justify each judgment, and produce a final recommendation with caveats.",
@@ -137,7 +429,7 @@ const LEVELS = [
         "Assign weights (e.g., 'weight readability 30%, employability 25%...').",
         "Ask for a table AND a recommendation paragraph — test that you specified both.",
         "Require counterarguments — this tests whether your prompt captures evaluative nuance.",
-        "Evaluate using Rubric Criteria 2, 4, and 6. This task should score highly on criterion 6."
+        "Evaluate your prompt for specificity, alignment, and higher-order thinking with CLEAR scoring." 
       ],
       time: "30–35 min",
       difficulty: "Advanced",
@@ -152,6 +444,64 @@ const LEVELS = [
     icon: "✨",
     tagline: "Design & Generate",
     desc: "Construct meta-prompts that direct AI to design entirely new artifacts, frameworks, systems, or structured outputs by synthesizing novel combinations of knowledge.",
+    scenarios: [
+      {
+        title: "Meta-Prompt Template",
+        objective: "Write a prompt that asks the AI to generate a reusable prompt template for a given teaching objective.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou are building a prompt library for teaching critical thinking.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that instructs an AI to generate a prompt template for teaching <span class="hl3">critical thinking in high school history</span>, including placeholders for topic and audience.`,
+        instructions: [
+          "Specify the desired template components (role, structure, evaluation checklist).",
+          "Ask for placeholders (e.g., [TOPIC], [AUDIENCE]).",
+          "Use CLEAR scoring to ensure your meta-prompt is explicit and adaptable."
+        ],
+        time: "40–50 min",
+        difficulty: "Expert",
+        focus: "Meta-Prompting · Structure",
+        hint: "Make the template reusable by including bracketed placeholders."
+      },
+      {
+        title: "Instruction Generator",
+        objective: "Create a prompt that asks the AI to generate step-by-step instructions for another user to write a prompt.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou want to teach someone how to write a quality prompt.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to produce a <span class="hl3">step-by-step guide</span> for writing a high-quality prompt, including common pitfalls.`,
+        instructions: [
+          "Ask for a structured, numbered guide.",
+          "Include an explicit list of common mistakes to avoid.",
+          "Use CLEAR scoring to ensure the resulting instructions are clear and logical."
+        ],
+        time: "35–45 min",
+        difficulty: "Expert",
+        focus: "Logical · Reflective",
+        hint: "Request both the steps and a short rationale for each."
+      },
+      {
+        title: "Adaptive Prompt Assistant",
+        objective: "Write a prompt that asks the AI to adapt an existing prompt for a different audience or purpose.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou have a prompt written for marketing.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt asking an AI to adapt the marketing prompt for use in a teaching context, explaining the changes made.`,
+        instructions: [
+          "Specify the original and target audiences.",
+          "Ask for a short explanation of the changes made.",
+          "Use CLEAR scoring to ensure the prompt is adaptive and reflective."
+        ],
+        time: "35–45 min",
+        difficulty: "Expert",
+        focus: "Adaptive · Reflective",
+        hint: "Ask the AI to describe what was changed and why."
+      },
+      {
+        title: "Output Critic",
+        objective: "Ask the AI to evaluate its own generated prompt output and suggest improvements.",
+        prompt: `<span class="hl">// SCENARIO</span>\nYou want an AI to critique and improve its own prompt generation.\n\n<span class="hl2">YOUR TASK:</span>\nWrite a prompt that asks an AI to generate a prompt for a task, then evaluate and revise its own prompt for clarity and effectiveness.`,
+        instructions: [
+          "Request both an initial prompt and a subsequent revision.",
+          "Ask the AI to explain why the revision is better.",
+          "Use CLEAR scoring to ensure the prompt encourages reflection."
+        ],
+        time: "40–50 min",
+        difficulty: "Expert",
+        focus: "Reflective · Explicit",
+        hint: "Instruct the AI to treat its first version as a draft and improve it."
+      }
+    ],
     task: {
       title: "The Prompt Architect",
       objective: "Write a meta-prompt — a prompt that generates another high-quality prompt. Your meta-prompt must specify all elements of the output prompt including its structure, strategies, format, and evaluation criteria it should satisfy.",
@@ -172,88 +522,10 @@ const LEVELS = [
 ];
 
 /* ═══════════════════════════════════════════════
-   DATA — RUBRIC
+   SCORING — CLEAR FRAMEWORK
 ═══════════════════════════════════════════════ */
-const RUBRIC = [
-  {
-    num: 1,
-    title: "Clarity of Prompt (Explicitness)",
-    desc: "Measures how clearly the prompt defines the task, format, target audience, and constraints. A clear prompt eliminates ambiguity and leaves no room for the AI to make unwanted assumptions.",
-    cite: "Jiang et al. (2023) · Reynolds & McDonell (2021)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "Vague or incomplete; task, format, and audience are largely undefined." },
-      { val: 2, label: "Developing", desc: "Partially clear; some key elements (audience or format) are missing or implied." },
-      { val: 3, label: "Proficient", desc: "Clear task and format; audience is specified with minor ambiguities remaining." },
-      { val: 4, label: "Exemplary",  desc: "Fully explicit; task, format, audience, and constraints are all precisely defined." }
-    ],
-    rrl: "<strong>Jiang et al. (2023)</strong> found that explicit task framing in prompts significantly improves LLM output precision. <strong>Reynolds & McDonell (2021)</strong> established that prompt programming — treating prompts as precise specifications — is fundamental to reliable AI behavior."
-  },
-  {
-    num: 2,
-    title: "Specificity / Detail of Information Requested",
-    desc: "Measures how detailed the prompt is regarding specific sections, subtopics, reasoning steps, or required inclusions. Specificity prevents generic outputs.",
-    cite: "Lee et al. (2022) · Benotti & Cusack (2023)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "Highly generic; no specific details or subtopics are requested." },
-      { val: 2, label: "Developing", desc: "Some detail provided, but major subtopics or expected depth are unspecified." },
-      { val: 3, label: "Proficient", desc: "Most key subtopics and expected depth are addressed with specific language." },
-      { val: 4, label: "Exemplary",  desc: "All critical subtopics, reasoning steps, and depth requirements are explicitly stated." }
-    ],
-    rrl: "<strong>Lee et al. (2022)</strong> demonstrated that prompt specificity is the strongest single predictor of AI output quality. <strong>Benotti & Cusack (2023)</strong> identified under-specification as the primary failure mode in novice prompt writing."
-  },
-  {
-    num: 3,
-    title: "Use of Prompt Engineering Strategies",
-    desc: "Evaluates whether deliberate techniques are applied — including role prompting, decomposition, chain-of-thought reasoning, few-shot examples, or structured output framing.",
-    cite: "Shin et al. (2024) · Reynolds & McDonell (2021)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "No recognizable prompt engineering strategies present." },
-      { val: 2, label: "Developing", desc: "One strategy loosely applied (e.g., basic role assignment without context)." },
-      { val: 3, label: "Proficient", desc: "Two or more strategies clearly applied (e.g., role + decomposition, or CoT + format)." },
-      { val: 4, label: "Exemplary",  desc: "Three or more strategies skillfully integrated; strategies complement each other coherently." }
-    ],
-    rrl: "<strong>Shin et al. (2024)</strong> showed that combining multiple structured prompting strategies produces compoundingly better outputs. <strong>Reynolds & McDonell (2021)</strong> formalized the taxonomy of prompt programming strategies for LLMs."
-  },
-  {
-    num: 4,
-    title: "Alignment with Task Objectives / Academic Accuracy",
-    desc: "Assesses whether the prompt accurately reflects the learning or task objective and would generate academically relevant, factually grounded output.",
-    cite: "Anderson & Krathwohl (2001) · Jones & Hindle (2023)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "Prompt is misaligned; would not produce output relevant to the stated objective." },
-      { val: 2, label: "Developing", desc: "Partially aligned; some elements drift from the objective or invite inaccurate output." },
-      { val: 3, label: "Proficient", desc: "Mostly aligned; prompt would produce academically relevant output with minor drift." },
-      { val: 4, label: "Exemplary",  desc: "Fully aligned; prompt precisely targets the learning objective and guards against inaccuracy." }
-    ],
-    rrl: "<strong>Anderson & Krathwohl (2001)</strong> established that learning tasks must be designed to match the intended cognitive level. <strong>Jones & Hindle (2023)</strong> found that misalignment between prompt intent and AI output is amplified when prompts lack objective grounding."
-  },
-  {
-    num: 5,
-    title: "Output Structure / Format Guidance",
-    desc: "Measures whether the prompt explicitly instructs the AI on output structure — including format type, length, visual organization, or specific output components.",
-    cite: "Zhou & Pan (2023) · Jiang et al. (2023)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "No format guidance; output structure is left entirely to the AI." },
-      { val: 2, label: "Developing", desc: "Minimal format mentioned (e.g., 'write a list') without structural specifics." },
-      { val: 3, label: "Proficient", desc: "Format is clearly specified (e.g., 'a numbered table with 4 columns and a summary paragraph')." },
-      { val: 4, label: "Exemplary",  desc: "Precise multi-element format instructions; length, sections, and component ordering are all defined." }
-    ],
-    rrl: "<strong>Zhou & Pan (2023)</strong> found that output format specification is the second most impactful prompt feature after task clarity. <strong>Jiang et al. (2023)</strong> showed that structured output prompts reduce hallucination rates in LLMs."
-  },
-  {
-    num: 6,
-    title: "Cognitive Demand / Higher-Order Thinking",
-    desc: "Evaluates whether the prompt requires analysis, synthesis, evaluation, or creative generation rather than simple information retrieval or paraphrase.",
-    cite: "Anderson & Krathwohl (2001) · Benotti & Cusack (2023)",
-    scores: [
-      { val: 1, label: "Beginning",  desc: "Recalls only; no analysis, comparison, judgment, or creation required." },
-      { val: 2, label: "Developing", desc: "Basic comprehension or application only; no higher-order thinking demanded." },
-      { val: 3, label: "Proficient", desc: "Analysis or evaluation present; prompt requires the AI to reason beyond surface-level recall." },
-      { val: 4, label: "Exemplary",  desc: "High-order synthesis or meta-cognitive demand; prompt requires generation, critique, or reflective reasoning." }
-    ],
-    rrl: "<strong>Anderson & Krathwohl (2001)</strong> established that cognitive demand directly predicts learning depth. <strong>Benotti & Cusack (2023)</strong> found that novice prompters rarely exceed comprehension-level cognitive demand."
-  }
-];
+// This scoring is loosely based on the CLEAR framework (Concise, Logical, Explicit, Adaptive, Reflective)
+// and assigns 0–4 points per dimension for a maximum of 20.
 
 const TAX_DATA = [
   { name: "Remembering",  color: "#38bdf8", width: 16  },
@@ -277,6 +549,7 @@ const DEFAULT_STATE = {
   progress: 0,
   unlockedLevels: [1],
   promptHistory: {},
+  hintsUnlocked: {},
   achievements: [],
   lastUpdated: Date.now()
 };
@@ -325,6 +598,7 @@ function mergeState(primary, incoming) {
       .slice(0, 30); // keep last 30 entries per level
   });
 
+  merged.hintsUnlocked = { ...(primary.hintsUnlocked || {}), ...(incoming.hintsUnlocked || {}) };
   merged.achievements = Array.from(new Set([...(primary.achievements || []), ...(incoming.achievements || [])]));
   merged.lastUpdated = Date.now();
   return merged;
@@ -367,9 +641,34 @@ function isLevelUnlocked(levelId) {
   return currentState && Array.isArray(currentState.unlockedLevels) && currentState.unlockedLevels.includes(levelId);
 }
 
+function getNextUnlockInfo() {
+  if (!currentState) return null;
+  const unlocked = Array.isArray(currentState.unlockedLevels) && currentState.unlockedLevels.length > 0
+    ? Math.max(...currentState.unlockedLevels)
+    : 1;
+  const next = Math.min(6, unlocked + 1);
+  const required = (next - 1) * SPARKS_PER_LEVEL;
+  const current = currentState.sparks || 0;
+  const needed = Math.max(0, required - current);
+  return { nextLevel: next, required, needed, unlocked: isLevelUnlocked(next) };
+}
+
 function updateSparksUI() {
   const el = document.getElementById('sparks-count');
+  const nextEl = document.getElementById('sparks-next');
   if (el && currentState) el.textContent = String(currentState.sparks || 0);
+  const next = getNextUnlockInfo();
+  if (nextEl) {
+    if (!next) {
+      nextEl.textContent = '';
+      return;
+    }
+    if (next.unlocked) {
+      nextEl.textContent = `✅ Level ${next.nextLevel} unlocked`;
+    } else {
+      nextEl.textContent = `(${next.needed} sparks to unlock Level ${next.nextLevel})`;
+    }
+  }
 }
 
 function updateClearScore(score) {
@@ -379,18 +678,21 @@ function updateClearScore(score) {
     el.textContent = '—';
     return;
   }
-  el.textContent = `${score.total}/24`;
+  el.textContent = `${score.total}/20`;
 }
 
 function updateUIWithProgress() {
   if (!currentState) return;
-  const progress = currentState.progress || 0;
+
+  const unlockedLevels = Array.isArray(currentState.unlockedLevels) ? currentState.unlockedLevels : [1];
+  const maxUnlocked = Math.max(1, ...unlockedLevels);
+
   const bar = document.getElementById('progress-bar');
-  if (bar) bar.style.width = `${(progress / 6) * 100}%`;
+  if (bar) bar.style.width = `${(maxUnlocked / LEVELS.length) * 100}%`;
 
   document.querySelectorAll('.level-card').forEach(card => {
     const id = Number(card.dataset.levelId);
-    card.classList.toggle('completed', id <= progress);
+    card.classList.toggle('completed', unlockedLevels.includes(id));
     card.classList.toggle('locked', !isLevelUnlocked(id));
   });
 
@@ -410,86 +712,66 @@ function showAchievement(title, desc) {
 
 function maybeUnlockNextLevel() {
   if (!currentState) return;
-  const nextLevel = Math.min(6, Math.floor((currentState.sparks || 0) / SPARKS_PER_LEVEL) + 1);
-  if (nextLevel > (currentState.progress || 0)) {
-    currentState.progress = nextLevel;
-  }
-  if (!isLevelUnlocked(nextLevel)) {
-    currentState.unlockedLevels = Array.from(new Set([...(currentState.unlockedLevels || []), nextLevel]));
-    showAchievement('Level Unlocked!', `Level ${nextLevel} is now available.`);
+  const next = getNextUnlockInfo();
+  if (!next) return;
+
+  if (!next.unlocked && currentState.sparks >= next.required) {
+    currentState.unlockedLevels = Array.from(new Set([...(currentState.unlockedLevels || []), next.nextLevel]));
+    showAchievement('Level Unlocked!', `Level ${next.nextLevel} is now available.`);
   }
 }
 
 function scorePrompt(promptText, lv) {
+  // Scoring is based on the CLEAR framework (Concise, Logical, Explicit, Adaptive, Reflective).
+  // Each dimension is scored 0–4 for a total of 20.
   const text = promptText.trim().toLowerCase();
-  const keywords = [
-    ...(lv.task.prompt.match(/<span class="hl">([^<]+)<\/span>/g) || []).map(m => m.replace(/<[^>]+>/g, '').toLowerCase()),
-    ...(lv.task.prompt.match(/<span class="hl2">([^<]+)<\/span>/g) || []).map(m => m.replace(/<[^>]+>/g, '').toLowerCase()),
-    ...(lv.task.prompt.match(/<span class="hl3">([^<]+)<\/span>/g) || []).map(m => m.replace(/<[^>]+>/g, '').toLowerCase())
-  ];
+  const words = text.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
 
-  const has = (terms) => terms.some(t => text.includes(t));
   const countMatches = (terms) => terms.reduce((count, t) => count + (text.includes(t) ? 1 : 0), 0);
 
-  // 1. Clarity: explicit instruction, directives, and length
-  let clarity = 1;
-  const claritySignals = ['write', 'create', 'generate', 'produce', 'instruct', 'explain', 'describe'];
-  const hasClarity = has(claritySignals);
-  if (text.length > 150 && hasClarity) clarity = 4;
-  else if (text.length > 100 && hasClarity) clarity = 3;
-  else if (text.length > 60) clarity = 2;
+  // 1. Concise: clear, direct language with minimal fluff.
+  let concise = 1;
+  if (wordCount >= 15 && wordCount <= 80) concise = 4;
+  else if (wordCount >= 12 && wordCount <= 120) concise = 3;
+  else if (wordCount >= 8 && wordCount <= 180) concise = 2;
 
-  // 2. Specificity: uses task keywords and details
-  let specificity = 1;
-  const matched = countMatches(keywords);
-  if (matched >= 5) specificity = 4;
-  else if (matched >= 3) specificity = 3;
-  else if (matched >= 1) specificity = 2;
+  // 2. Logical: step-by-step structure and sequencing.
+  const logicalTerms = ['first', 'next', 'then', 'after', 'finally', 'because', 'so that', 'therefore', 'in order to'];
+  const logicalCount = countMatches(logicalTerms);
+  let logical = 1;
+  if (logicalCount >= 4) logical = 4;
+  else if (logicalCount >= 3) logical = 3;
+  else if (logicalCount >= 1) logical = 2;
 
-  // 3. Strategies: role prompting, chain of thought, examples, constraints
-  let strategies = 1;
-  const strategyTerms = ['act as', 'role', 'assistant', 'first', 'step', 'reason', 'because', 'so that', 'first,', 'then', 'if', 'otherwise', 'example', 'e.g.', 'for example', 'format'];
-  const stratCount = countMatches(strategyTerms);
-  if (stratCount >= 5) strategies = 4;
-  else if (stratCount >= 3) strategies = 3;
-  else if (stratCount >= 1) strategies = 2;
+  // 3. Explicit: explicit instructions, output format, and required details.
+  const explicitTerms = ['write', 'create', 'generate', 'describe', 'explain', 'list', 'format', 'structured', 'include'];
+  const explicitCount = countMatches(explicitTerms);
+  let explicit = 1;
+  if (explicitCount >= 5) explicit = 4;
+  else if (explicitCount >= 3) explicit = 3;
+  else if (explicitCount >= 1) explicit = 2;
 
-  // 4. Alignment: matches task objective language
-  let alignment = 1;
-  const objectiveTerms = [lv.bloom.toLowerCase(), lv.task.title.toLowerCase(), lv.task.objective.toLowerCase()];
-  const alignmentMatch = objectiveTerms.filter(t => t && t.length > 3).reduce((count, term) => count + (text.includes(term) ? 1 : 0), 0);
-  if (alignmentMatch >= 2) alignment = 4;
-  else if (alignmentMatch === 1) alignment = 3;
-  else if (matched > 0) alignment = 2;
+  // 4. Adaptive: mentions audience, constraints, or context.
+  const adaptiveTerms = ['for', 'as a', 'audience', 'tone', 'style', 'context', 'beginner', 'expert', 'professional', 'student'];
+  const adaptiveCount = countMatches(adaptiveTerms);
+  let adaptive = 1;
+  if (adaptiveCount >= 4) adaptive = 4;
+  else if (adaptiveCount >= 3) adaptive = 3;
+  else if (adaptiveCount >= 1) adaptive = 2;
 
-  // 5. Output structure: format instructions included
-  let structure = 1;
-  const formatTerms = ['list', 'table', 'paragraph', 'bullet', 'format', 'numbered', 'markdown', 'json', 'csv'];
-  const formatCount = countMatches(formatTerms);
-  if (formatCount >= 4) structure = 4;
-  else if (formatCount >= 3) structure = 3;
-  else if (formatCount >= 1) structure = 2;
+  // 5. Reflective: asks for revision, evaluation, or iteration.
+  const reflectiveTerms = ['revise', 'refine', 'improve', 'review', 'check', 'evaluate', 'feedback', 'iterate'];
+  const reflectiveCount = countMatches(reflectiveTerms);
+  let reflective = 1;
+  if (reflectiveCount >= 4) reflective = 4;
+  else if (reflectiveCount >= 3) reflective = 3;
+  else if (reflectiveCount >= 1) reflective = 2;
 
-  // 6. Cognitive demand: ask for evaluation/analysis/creation
-  let demand = 1;
-  const demandTerms = ['compare', 'evaluate', 'analyze', 'synthesize', 'critique', 'design', 'create', 'generate', 'rank', 'justify'];
-  const demandCount = countMatches(demandTerms);
-  if (demandCount >= 4) demand = 4;
-  else if (demandCount >= 3) demand = 3;
-  else if (demandCount >= 1) demand = 2;
-
-  const total = clarity + specificity + strategies + alignment + structure + demand;
-
+  const total = concise + logical + explicit + adaptive + reflective;
   return {
     total,
-    breakdown: {
-      clarity,
-      specificity,
-      strategies,
-      alignment,
-      structure,
-      demand
-    }
+    breakdown: { concise, logical, explicit, adaptive, reflective }
   };
 }
 
@@ -511,7 +793,7 @@ function renderPromptHistory(lv) {
     return `
       <div class="history-item">
         <div class="history-meta">
-          <span class="history-score">Score: ${e.score?.total ?? '?'} / 24</span>
+          <span class="history-score">Score: ${e.score?.total ?? '?'} / 20</span>
           <span class="history-time">${when}</span>
         </div>
         <div class="history-prompt">${e.prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
@@ -528,20 +810,19 @@ function applyPromptFeedback(score, lv) {
 
   feedback.innerHTML = `
     <h4>Feedback</h4>
-    <p><strong>Total CLEAR score:</strong> ${score.total}/24</p>
+    <p><strong>Total CLEAR score:</strong> ${score.total}/20</p>
     <ul class="feedback-list">
-      <li><strong>Clarity:</strong> ${score.breakdown.clarity}/4</li>
-      <li><strong>Specificity:</strong> ${score.breakdown.specificity}/4</li>
-      <li><strong>Strategies:</strong> ${score.breakdown.strategies}/4</li>
-      <li><strong>Alignment:</strong> ${score.breakdown.alignment}/4</li>
-      <li><strong>Structure:</strong> ${score.breakdown.structure}/4</li>
-      <li><strong>Demand:</strong> ${score.breakdown.demand}/4</li>
+      <li><strong>Concise:</strong> ${score.breakdown.concise}/4</li>
+      <li><strong>Logical:</strong> ${score.breakdown.logical}/4</li>
+      <li><strong>Explicit:</strong> ${score.breakdown.explicit}/4</li>
+      <li><strong>Adaptive:</strong> ${score.breakdown.adaptive}/4</li>
+      <li><strong>Reflective:</strong> ${score.breakdown.reflective}/4</li>
     </ul>
-    <p class="muted">Tip: Try editing the prompt to include more explicit format instructions and a clear reasoning directive.</p>
+    <p class="muted">Tip: Try editing the prompt to be more explicit about format, audience, and next steps for improvement.</p>
   `;
 }
 
-function handlePromptSubmit(lv) {
+function handlePromptSubmit(lv, scenario) {
   const promptEl = document.getElementById('user-prompt');
   const promptText = promptEl?.value.trim() || '';
   if (!promptText) {
@@ -549,7 +830,7 @@ function handlePromptSubmit(lv) {
     return;
   }
 
-  const score = scorePrompt(promptText, lv);
+  const score = scorePrompt(promptText, scenario);
   updateClearScore(score);
   applyPromptFeedback(score, lv);
 
@@ -571,30 +852,45 @@ function handlePromptSubmit(lv) {
   updateUIWithProgress();
   renderPromptHistory(lv);
 
-  showAchievement('Nice work!', `You earned ${SPARKS_PER_ATTEMPT} Sparks (CLEAR score: ${score.total}/24).`);
+  showAchievement('Nice work!', `You earned ${SPARKS_PER_ATTEMPT} Sparks (CLEAR score: ${score.total}/20).`);
 }
 
-function handleHintRequest(lv) {
+function handleHintRequest(lv, scenarioIndex = 0) {
   if (!currentState) return;
-  const currentSparks = currentState.sparks || 0;
-  if (currentSparks < SPARKS_FOR_HINT) {
-    alert('Not enough sparks — try submitting prompts to earn more.');
-    return;
-  }
+  const hintKey = `hint:${lv.id}:${scenarioIndex}`;
+  const alreadyUnlocked = currentState.hintsUnlocked?.[hintKey];
 
-  currentState.sparks = currentSparks - SPARKS_FOR_HINT;
-  saveState();
-  updateSparksUI();
+  if (!alreadyUnlocked) {
+    const currentSparks = currentState.sparks || 0;
+    if (currentSparks < SPARKS_FOR_HINT) {
+      alert('Not enough sparks — try submitting prompts to earn more.');
+      return;
+    }
+
+    currentState.sparks = currentSparks - SPARKS_FOR_HINT;
+    currentState.hintsUnlocked = currentState.hintsUnlocked || {};
+    currentState.hintsUnlocked[hintKey] = true;
+    saveState();
+    updateSparksUI();
+
+    showAchievement('Hint unlocked!', `Hint revealed for Level ${lv.id}.`);
+  }
 
   const hintBox = document.getElementById('hint-box');
+  const scenarios = lv.scenarios || [lv.task];
+  const scenario = scenarios[scenarioIndex] || scenarios[0];
   if (hintBox) {
-    hintBox.textContent = lv.hint || 'Try focusing on the key output format and what exact details the AI should include.';
+    hintBox.textContent = scenario.hint || 'Try focusing on the key output format and what exact details the AI should include.';
   }
 
-  showAchievement('Hint unlocked!', `Hint revealed for Level ${lv.id}.`);
+  const hintBtn = document.getElementById('get-hint');
+  if (hintBtn) {
+    hintBtn.textContent = 'Hint Unlocked';
+    hintBtn.disabled = true;
+  }
 }
 
-function setupPromptPlayer(lv) {
+function setupPromptPlayer(lv, scenario, scenarioIndex = 0) {
   const promptEl = document.getElementById('user-prompt');
   const submitBtn = document.getElementById('submit-prompt');
   const hintBtn = document.getElementById('get-hint');
@@ -609,11 +905,18 @@ function setupPromptPlayer(lv) {
   updateClearScore(null);
 
   if (submitBtn) {
-    submitBtn.onclick = () => handlePromptSubmit(lv);
+    submitBtn.onclick = () => handlePromptSubmit(lv, scenario);
   }
 
   if (hintBtn) {
-    hintBtn.onclick = () => handleHintRequest(lv);
+    hintBtn.onclick = () => handleHintRequest(lv, scenarioIndex);
+  }
+
+  const hintKey = `hint:${lv.id}:${scenarioIndex}`;
+  const hintUnlocked = currentState?.hintsUnlocked?.[hintKey];
+  if (hintBtn) {
+    hintBtn.textContent = hintUnlocked ? 'Hint Unlocked' : `Use Sparks for Hint (‑${SPARKS_FOR_HINT})`;
+    hintBtn.disabled = !!hintUnlocked;
   }
 
   if (copyBadPromptBtn) {
@@ -626,32 +929,6 @@ function setupPromptPlayer(lv) {
 
   renderPromptHistory(lv);
 }
-
-/* ═══════════════════════════════════════════════
-   PROGRESS UI
-═══════════════════════════════════════════════ */
-function updateUIWithProgress(userData) {
-  const progress = userData.progress || 0;
-  const bar = document.getElementById('progress-bar');
-  if (bar) bar.style.width = `${(progress / 6) * 100}%`;
-
-  document.querySelectorAll('.level-card').forEach((card, idx) => {
-    if (idx < progress) card.classList.add('completed');
-  });
-
-  if (userData.achievements && userData.achievements.length > 0) {
-    showAchievement('Welcome back!', 'Continue your progress!');
-  }
-}
-
-function showAchievement(title, desc) {
-  const el = document.getElementById('achievement');
-  el.querySelector('.achievement-title').textContent = title;
-  el.querySelector('.achievement-desc').textContent  = desc;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
-}
-
 
 /* ═══════════════════════════════════════════════
    RENDER LEVEL CARDS
@@ -678,7 +955,7 @@ LEVELS.forEach((lv, i) => {
 /* ═══════════════════════════════════════════════
    TASK PANEL
 ═══════════════════════════════════════════════ */
-function openTask(lv, card) {
+function openTask(lv, card, scenarioIndex = 0) {
   if (!isLevelUnlocked(lv.id)) {
     const needed = Math.max(0, (lv.id - 1) * SPARKS_PER_LEVEL - (currentState?.sparks || 0));
     showAchievement('Locked', `Earn ${needed} more Sparks to unlock Level ${lv.id}.`);
@@ -698,7 +975,25 @@ function openTask(lv, card) {
   badge.style.color       = lv.color;
   badge.style.borderColor = lv.color + '55';
   badge.style.background  = lv.color + '18';
-  document.getElementById('tp-title').textContent = lv.task.title;
+
+  const scenarios = lv.scenarios || [lv.task];
+  const scenario = scenarios[scenarioIndex] || scenarios[0];
+
+  document.getElementById('tp-title').textContent = scenario.title || (lv.task && lv.task.title) || `Level ${lv.id}`;
+
+  // Scenario selector
+  const selector = document.getElementById('scenario-selector');
+  if (selector) {
+    selector.innerHTML = '';
+    scenarios.forEach((s, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `scenario-btn${idx === scenarioIndex ? ' active' : ''}`;
+      btn.textContent = `Scenario ${idx + 1}`;
+      btn.addEventListener('click', () => openTask(lv, card, idx));
+      selector.appendChild(btn);
+    });
+  }
 
   // Progress steps
   const prog = document.getElementById('tp-progress');
@@ -712,79 +1007,36 @@ function openTask(lv, card) {
 
   // Objective
   document.getElementById('tp-objective').innerHTML =
-    `<strong>🎯 Learning Objective</strong>${lv.task.objective}`;
+    `<strong>🎯 Learning Objective</strong>${scenario.objective || ''}`;
 
   // Prompt box
   document.getElementById('tp-prompt').innerHTML =
-    lv.task.prompt.replace(/\n/g, '<br>');
+    (scenario.prompt || '').replace(/\n/g, '<br>');
 
   // Example of a prompt that can be improved
   const badPromptEl = document.getElementById('bad-prompt');
-  if (badPromptEl) badPromptEl.textContent = lv.task.badPrompt ||
+  if (badPromptEl) badPromptEl.textContent = scenario.badPrompt ||
     'A better prompt will use explicit instructions, include output format, and request reasoning.';
 
   // Instructions
   document.getElementById('tp-instructions').innerHTML =
     `<h4>// How to Approach This Task</h4>
-     <ul class="instruction-list">${lv.task.instructions.map(i => `<li>${i}</li>`).join('')}</ul>`;
+     <ul class="instruction-list">${(scenario.instructions || []).map(i => `<li>${i}</li>`).join('')}</ul>`;
 
   // Meta chips
   document.getElementById('tp-meta').innerHTML = `
-    <div class="meta-chip">⏱ Estimated Time: <span>${lv.task.time}</span></div>
-    <div class="meta-chip">🎚 Difficulty: <span>${lv.task.difficulty}</span></div>
-    <div class="meta-chip">🔑 Focus Areas: <span>${lv.task.focus}</span></div>
+    <div class="meta-chip">⏱ Estimated Time: <span>${scenario.time || ''}</span></div>
+    <div class="meta-chip">🎚 Difficulty: <span>${scenario.difficulty || ''}</span></div>
+    <div class="meta-chip">🔑 Focus Areas: <span>${scenario.focus || ''}</span></div>
   `;
 
-  setupPromptPlayer(lv);
+  setupPromptPlayer(lv, scenario, scenarioIndex);
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
 window.closeTask = function () {
   document.getElementById('task-panel').classList.remove('visible');
   document.querySelectorAll('.level-card').forEach(c => c.classList.remove('active'));
-};
-
-/* ═══════════════════════════════════════════════
-   RENDER RUBRIC
-═══════════════════════════════════════════════ */
-const rubricGrid = document.getElementById('rubric-grid');
-RUBRIC.forEach((r, i) => {
-  const card = document.createElement('div');
-  card.className = 'rubric-card';
-  card.style.animationDelay = `${i * 0.07}s`;
-  card.innerHTML = `
-    <div class="rubric-header" onclick="toggleRubric(this)">
-      <div class="rubric-header-left">
-        <div class="rubric-num">${r.num}</div>
-        <div>
-          <div class="rubric-title">${r.title}</div>
-          <div class="rubric-cite">${r.cite}</div>
-        </div>
-      </div>
-      <div class="rubric-toggle">▾</div>
-    </div>
-    <div class="rubric-body">
-      <p class="rubric-desc">${r.desc}</p>
-      <div class="score-grid">
-        ${r.scores.map(s => `
-          <div class="score-cell">
-            <div class="score-val s${s.val}">${s.val}</div>
-            <div class="score-label">${s.label}</div>
-            <div class="score-desc">${s.desc}</div>
-          </div>
-        `).join('')}
-      </div>
-      <div class="rrl-block">
-        <div class="rrl-label">Research Basis (RRL)</div>
-        <div class="rrl-cite">${r.rrl}</div>
-      </div>
-    </div>
-  `;
-  rubricGrid.appendChild(card);
-});
-
-window.toggleRubric = function (header) {
-  header.parentElement.classList.toggle('expanded');
 };
 
 /* ═══════════════════════════════════════════════
@@ -831,7 +1083,7 @@ const animObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.level-card, .rubric-card').forEach(el => {
+document.querySelectorAll('.level-card').forEach(el => {
   el.style.opacity   = '0';
   el.style.transform = 'translateY(20px)';
   el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -876,11 +1128,31 @@ function setAuthUIState({ message, showForms = false, showSignedIn = false, emai
   }
 }
 
+function showSection(sectionId) {
+  ['hero', 'intro', 'levels'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('hidden', id !== sectionId);
+  });
+}
+
+function showIntroSection() {
+  showSection('intro');
+  document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showLevelsSection() {
+  showSection('levels');
+  document.getElementById('levels')?.scrollIntoView({ behavior: 'smooth' });
+}
+
 function initializeAuthUI() {
   const loginBtn = document.getElementById('login-btn');
   const signupBtn = document.getElementById('signup-btn');
   const guestBtn = document.getElementById('guest-btn');
   const signoutBtn = document.getElementById('signout-btn');
+  const startIntroBtn = document.getElementById('start-intro-btn');
+  const startTasksBtn = document.getElementById('start-tasks-btn');
 
   if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
@@ -958,6 +1230,18 @@ function initializeAuthUI() {
       }
     });
   }
+
+  if (startIntroBtn) {
+    startIntroBtn.addEventListener('click', () => {
+      showIntroSection();
+    });
+  }
+
+  if (startTasksBtn) {
+    startTasksBtn.addEventListener('click', () => {
+      showLevelsSection();
+    });
+  }
 }
 
 async function initApp() {
@@ -973,8 +1257,7 @@ async function initApp() {
     currentUser = { uid: null, email: null, isGuest: true };
     await loadState();
     updateUIWithProgress();
-    const firstCard = document.querySelector('.level-card');
-    if (firstCard) openTask(LEVELS[0], firstCard);
+    showIntroSection();
     return;
   }
 
@@ -987,8 +1270,7 @@ async function initApp() {
       setAuthUIState({ message: `Signed in as ${currentUser.email}.`, showForms: false, showSignedIn: true, email: currentUser.email });
       await loadState();
       updateUIWithProgress();
-      const firstCard = document.querySelector('.level-card');
-      if (firstCard) openTask(LEVELS[0], firstCard);
+      showIntroSection();
     } else {
       currentUser = { uid: null, email: null, isGuest: true };
       setAuthUIState({
@@ -999,8 +1281,7 @@ async function initApp() {
       });
       await loadState();
       updateUIWithProgress();
-      const firstCard = document.querySelector('.level-card');
-      if (firstCard) openTask(LEVELS[0], firstCard);
+      showIntroSection();
     }
   });
 }
