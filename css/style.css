@@ -285,6 +285,7 @@ nav {
   text-transform: uppercase;
 }
 .stat-progress {
+  position: relative;
   height: 6px;
   background: rgba(255,255,255,0.08);
   border-radius: 999px;
@@ -298,7 +299,30 @@ nav {
   border-radius: 999px;
   transition: width 0.5s ease;
 }
-
+.progress-milestones {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.progress-milestones .milestone {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 16px;
+  background: rgba(255,255,255,0.35);
+  opacity: 0.6;
+  transform: translate(-50%, -50%);
+  transition: background 0.25s ease, opacity 0.25s ease;
+}
+.progress-milestones .milestone.achieved {
+  background: rgba(255,255,255,0.9);
+  opacity: 1;
+}
+.stat-meta {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.75);
+}
 .hero-cta-row {
   display: flex; gap: 18px; flex-wrap: wrap; margin-top: 28px;
 }

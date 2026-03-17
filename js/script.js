@@ -542,9 +542,19 @@ const TAX_DATA = [
 const STATE_KEY = 'metaforge_state_v2';
 const SPARKS_PER_ATTEMPT = 12;
 const SPARKS_FOR_HINT = 20;
+
+function getStateKey() {
+  const uid = currentUser?.uid;
+  return uid ? `${STATE_KEY}:${uid}` : STATE_KEY;
+}
 const SPARKS_FOR_EXAMPLE = 30;
 const SPARKS_FOR_DEEP_REVIEW = 30;
 const SPARKS_PER_LEVEL = 80;
+
+// Progress milestones: each milestone is unlocked every N Sparks.
+// Milestones are used for achievements and visual progress tracking.
+const SPARKS_PER_MILESTONE = 20;
+const MILESTONE_COUNT = 5;
 
 const DEFAULT_STATE = {
   sparks: 0,
@@ -552,12 +562,14 @@ const DEFAULT_STATE = {
   unlockedLevels: [1],
   promptHistory: {},
   storeUnlocked: {},
+  lastMilestone: 0,
   achievements: [],
   lastUpdated: Date.now()
 };
 
 let currentState = null;
 let currentUser = { uid: null, email: null, isGuest: true };
+let hasShownWelcome = false;
 
 function createInitialState() {
   return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -565,7 +577,7 @@ function createInitialState() {
 
 function loadStateFromLocal() {
   try {
-    const raw = localStorage.getItem(STATE_KEY);
+    const raw = localStorage.getItem(getStateKey());
     if (!raw) return createInitialState();
     const parsed = JSON.parse(raw);
     return { ...createInitialState(), ...parsed };
@@ -577,7 +589,7 @@ function loadStateFromLocal() {
 
 function saveStateToLocal(state) {
   try {
-    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    localStorage.setItem(getStateKey(), JSON.stringify(state));
   } catch (e) {
     console.warn('Unable to save state locally:', e);
   }
@@ -601,6 +613,7 @@ function mergeState(primary, incoming) {
   });
 
   merged.storeUnlocked = { ...(primary.storeUnlocked || {}), ...(incoming.storeUnlocked || {}) };
+  merged.lastMilestone = Math.max(primary.lastMilestone || 0, incoming.lastMilestone || 0);
   merged.achievements = Array.from(new Set([...(primary.achievements || []), ...(incoming.achievements || [])]));
   merged.lastUpdated = Date.now();
   return merged;
@@ -675,6 +688,8 @@ function updateSparksUI() {
       nextEl.textContent = `(${next.needed} sparks to unlock Level ${next.nextLevel})`;
     }
   }
+
+  updateUIWithProgress();
 }
 
 function updateClearScore(score) {
@@ -687,14 +702,61 @@ function updateClearScore(score) {
   el.textContent = `${score.total}/20`;
 }
 
+function getMilestoneInfo(sparks) {
+  const max = SPARKS_PER_MILESTONE * MILESTONE_COUNT;
+  const clamped = Math.min(Math.max(sparks || 0, 0), max);
+  const current = Math.floor(clamped / SPARKS_PER_MILESTONE);
+  const next = Math.min(current + 1, MILESTONE_COUNT);
+  const toNext = Math.max(0, next * SPARKS_PER_MILESTONE - clamped);
+  const progress = max === 0 ? 0 : clamped / max;
+  return { max, clamped, current, next, toNext, progress };
+}
+
 function updateUIWithProgress() {
   if (!currentState) return;
+
+  const sparks = currentState.sparks || 0;
+  const milestone = getMilestoneInfo(sparks);
+
+  const sparksStat = document.getElementById('stat-sparks-count');
+  if (sparksStat) sparksStat.textContent = String(sparks);
+
+  const bar = document.getElementById('progress-bar');
+  if (bar) bar.style.width = `${(milestone.progress * 100).toFixed(1)}%`;
+
+  const meta = document.getElementById('progress-meta');
+  if (meta) {
+    if (sparks >= milestone.max) {
+      meta.textContent = `🎉 All ${MILESTONE_COUNT} milestones reached!`; 
+    } else {
+      meta.textContent = `Next milestone in ${milestone.toNext} Sparks (at ${milestone.next * SPARKS_PER_MILESTONE}).`;
+    }
+  }
+
+  const milestoneContainer = document.getElementById('progress-milestones');
+  if (milestoneContainer) {
+    const existing = Array.from(milestoneContainer.querySelectorAll('.milestone'));
+    if (existing.length !== MILESTONE_COUNT) {
+      milestoneContainer.innerHTML = '';
+      for (let i = 1; i <= MILESTONE_COUNT; i += 1) {
+        const mark = document.createElement('span');
+        mark.className = 'milestone';
+        mark.dataset.index = String(i);
+        mark.style.left = `${(i / MILESTONE_COUNT) * 100}%`;
+        milestoneContainer.appendChild(mark);
+      }
+    }
+    milestoneContainer.querySelectorAll('.milestone').forEach(el => {
+      const idx = Number(el.dataset.index);
+      el.classList.toggle('achieved', idx <= milestone.current);
+    });
+  }
 
   const unlockedLevels = Array.isArray(currentState.unlockedLevels) ? currentState.unlockedLevels : [1];
   const maxUnlocked = Math.max(1, ...unlockedLevels);
 
-  const bar = document.getElementById('progress-bar');
-  if (bar) bar.style.width = `${(maxUnlocked / LEVELS.length) * 100}%`;
+  const levelBar = document.getElementById('level-progress');
+  if (levelBar) levelBar.style.width = `${(maxUnlocked / LEVELS.length) * 100}%`;
 
   document.querySelectorAll('.level-card').forEach(card => {
     const id = Number(card.dataset.levelId);
@@ -702,7 +764,8 @@ function updateUIWithProgress() {
     card.classList.toggle('locked', !isLevelUnlocked(id));
   });
 
-  if (currentState.achievements && currentState.achievements.length > 0) {
+  if (!hasShownWelcome && currentState.achievements && currentState.achievements.length > 0) {
+    hasShownWelcome = true;
     showAchievement('Welcome back!', 'Continue your progress.');
   }
 }
@@ -861,10 +924,16 @@ function handlePromptSubmit(lv, scenario) {
   currentState.promptHistory[lv.id] = currentState.promptHistory[lv.id] || [];
   currentState.promptHistory[lv.id].push(entry);
 
+  const previousMilestone = currentState.lastMilestone || 0;
+  const currentMilestone = Math.floor((currentState.sparks || 0) / SPARKS_PER_MILESTONE);
+  if (currentMilestone > previousMilestone) {
+    currentState.lastMilestone = currentMilestone;
+    showAchievement('Milestone reached!', `You hit ${currentMilestone * 20} Sparks!`);
+  }
+
   maybeUnlockNextLevel();
   saveState();
   updateSparksUI();
-  updateUIWithProgress();
   renderPromptHistory(lv);
 
   showAchievement('Nice work!', `You earned ${SPARKS_PER_ATTEMPT} Sparks (CLEAR score: ${score.total}/20).`);
@@ -1399,22 +1468,17 @@ function initializeAuthUI() {
 async function initApp() {
   initializeAuthUI();
 
-  if (!firebaseEnabled()) {
-    setAuthUIState({
-      message: 'Firebase not configured. Progress is stored locally in this browser. To enable cloud sync, add a Firebase config in firebase.config.js or set window.FIREBASE_CONFIG.',
-      showForms: true,
-      showSignedIn: false,
-      isGuest: true
-    });
-    currentUser = { uid: null, email: null, isGuest: true };
-    await loadState();
-    updateUIWithProgress();
-    showIntroSection();
-    return;
-  }
-
   await initFirebase();
-  setAuthUIState({ message: 'Checking account status…' });
+  const configured = firebaseEnabled();
+
+  setAuthUIState({
+    message: configured
+      ? 'Checking account status…'
+      : 'Firebase not configured. Sign in to store progress locally (no cloud sync).',
+    showForms: true,
+    showSignedIn: false,
+    isGuest: true
+  });
 
   await onAuthStateChanged(async (user) => {
     if (user) {
@@ -1426,7 +1490,9 @@ async function initApp() {
     } else {
       currentUser = { uid: null, email: null, isGuest: true };
       setAuthUIState({
-        message: 'Not signed in. You can continue as a guest or sign in to save progress across devices.',
+        message: configured
+          ? 'Not signed in. You can continue as a guest or sign in to save progress across devices.'
+          : 'Not signed in. Create an account or sign in to keep progress in this browser.',
         showForms: true,
         showSignedIn: false,
         isGuest: false

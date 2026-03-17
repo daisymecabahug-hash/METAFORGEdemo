@@ -12,6 +12,48 @@ let firebaseConfig = window.FIREBASE_CONFIG || {
   appId: "<YOUR_APP_ID>"
 };
 
+const LOCAL_AUTH_USERS_KEY = 'metaforge_local_users';
+const LOCAL_AUTH_CURRENT_USER_KEY = 'metaforge_local_current_user';
+const localAuthCallbacks = new Set();
+
+function loadLocalUsers() {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_AUTH_USERS_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveLocalUsers(users) {
+  try {
+    localStorage.setItem(LOCAL_AUTH_USERS_KEY, JSON.stringify(users));
+  } catch (e) {
+    console.warn('Unable to save local auth users', e);
+  }
+}
+
+function setLocalCurrentUser(user) {
+  try {
+    if (!user) {
+      localStorage.removeItem(LOCAL_AUTH_CURRENT_USER_KEY);
+    } else {
+      localStorage.setItem(LOCAL_AUTH_CURRENT_USER_KEY, JSON.stringify(user));
+    }
+  } catch (e) {
+    console.warn('Unable to set local current user', e);
+  }
+  for (const cb of localAuthCallbacks) cb(user);
+}
+
+function getLocalCurrentUser() {
+  try {
+    const raw = localStorage.getItem(LOCAL_AUTH_CURRENT_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function loadConfig() {
   // Attempt to load a local config file if present (gitignored).
   try {
@@ -34,6 +76,40 @@ function isConfigured() {
 
 export const firebaseEnabled = () => isConfigured();
 
+async function localSignIn(email, password) {
+  const users = loadLocalUsers();
+  if (!users[email] || users[email] !== password) {
+    throw new Error('Invalid email or password.');
+  }
+  const user = { uid: email, email, isGuest: false };
+  setLocalCurrentUser(user);
+  return user;
+}
+
+async function localSignUp(email, password) {
+  const users = loadLocalUsers();
+  if (users[email]) {
+    throw new Error('An account with that email already exists.');
+  }
+  users[email] = password;
+  saveLocalUsers(users);
+  const user = { uid: email, email, isGuest: false };
+  setLocalCurrentUser(user);
+  return user;
+}
+
+async function localSignOut() {
+  setLocalCurrentUser(null);
+  return null;
+}
+
+function localOnAuthStateChanged(callback) {
+  localAuthCallbacks.add(callback);
+  // Immediately call with current local user.
+  callback(getLocalCurrentUser());
+  return () => localAuthCallbacks.delete(callback);
+}
+
 let app = null;
 let auth = null;
 let db = null;
@@ -51,29 +127,40 @@ export async function initFirebase() {
 }
 
 async function ensureReady() {
-  if (!firebaseEnabled()) throw new Error('Firebase is not configured.');
+  if (!firebaseEnabled()) return;
   if (!auth || !db) await initFirebase();
 }
 
 export async function signInWithEmail(email, password) {
-  await ensureReady();
-  return auth.signInWithEmailAndPassword(email, password);
+  if (firebaseEnabled()) {
+    await ensureReady();
+    return auth.signInWithEmailAndPassword(email, password);
+  }
+  return localSignIn(email, password);
 }
 
 export async function signUpWithEmail(email, password) {
-  await ensureReady();
-  return auth.createUserWithEmailAndPassword(email, password);
+  if (firebaseEnabled()) {
+    await ensureReady();
+    return auth.createUserWithEmailAndPassword(email, password);
+  }
+  return localSignUp(email, password);
 }
 
 export async function signOut() {
-  await ensureReady();
-  return auth.signOut();
+  if (firebaseEnabled()) {
+    await ensureReady();
+    return auth.signOut();
+  }
+  return localSignOut();
 }
 
 export async function onAuthStateChanged(callback) {
-  if (!firebaseEnabled()) return () => {};
   await initFirebase();
-  return auth.onAuthStateChanged(callback);
+  if (firebaseEnabled()) {
+    return auth.onAuthStateChanged(callback);
+  }
+  return localOnAuthStateChanged(callback);
 }
 
 export async function getUserData(uid) {
